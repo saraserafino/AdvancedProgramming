@@ -1,50 +1,66 @@
-#include "../include/IntegrationMethods.hpp"
-#include "../include/moduleCfunctions.hpp"
+#include "../include/Optimisation.hpp"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 // ----------------------------------
-// Python interface - fake trampoline
+// Python interface - trampoline
 // ----------------------------------
 
-class PyQuadrature : public MODULEC::Quadrature {
+using namespace optimization;
+
+class PyOptimizationProblem : public OptimizationProblem {
 public:
     // Inherit the constructors
-    using MODULEC::Quadrature::Quadrature;
+    using OptimizationProblem::OptimizationProblem;
 
-    // Each virtual function needs a trampoline, but there isn't any
+  // Trampoline (one for each virtual function).
+  virtual double evaluate(const std::vector<double> &theta) override {
+    PYBIND11_OVERRIDE_PURE(
+        const std::vector<double>, /* Return type. */
+        OptimizationProblem,      /* Parent class. */
+        evaluate,        /* Name of function in C++ (must match Python name). */
+        theta      /* Argument(s). */
+    );
+  }
+
+  virtual std::vector<double> evaluate_gradient(const std::vector<double> &theta) override {
+    PYBIND11_OVERRIDE_PURE(
+        std::vector<double>, /* Return type. */
+        OptimizationProblem,      /* Parent class. */
+        evaluate_gradient,        /* Name of function in C++ (must match Python name). */
+        theta      /* Argument(s). */
+    );
+  }
 };
 
+
 namespace py = pybind11;
-using namespace MODULEC;
 
 // Wrap as Python module
 
-PYBIND11_MODULE(moduleC, m) {
-    m.doc() = "pybind11 moduleC plugin";
+PYBIND11_MODULE(optimization, m) {
+    m.doc() = "pybind11 optimization plugin";
 
-    py::class_<Quadrature, PyQuadrature>(m, "Quadrature")
-        .def(py::init<double, double, unsigned int>(),
-            py::arg("a"), py::arg("b"), py::arg("nBins"))
-        .def("get_weights", &Quadrature::get_weights, "Get the weights of the function to integrate")
-        .def("get_nodes", &Quadrature::get_nodes, "Get the nodes of the function to integrate");
+    py::class_<OptimizationProblem, PyOptimizationProblem>(m, "OptimizationProblem")
+        .def(py::init<const std::vector<double>>(),
+            py::arg("theta"));
 
-    py::class_<Midpoint, Quadrature>(m, "Midpoint")
-        .def(py::init<double, double, unsigned int>(),
-            py::arg("a"), py::arg("b"), py::arg("nBins"));
+    py::class_<QuadraticOptimizationProblem, OptimizationProblem>(m, "QuadraticOptimizationProblem")
+        .def(py::init<const std::vector<double>>(),
+            py::arg("theta"));
         
-    py::class_<GaussLegendre, Quadrature>(m, "GaussLegendre")
-        .def(py::init<double, double, unsigned int>(),
-            py::arg("a"), py::arg("b"), py::arg("nBins"))
-        .def("get_a", &GaussLegendre::get_a, "Get the lower bound of the function to integrate")
-        .def("get_b", &GaussLegendre::get_b, "Get the upper bound of the function to integrate");
-
-    m.def("evaluate", &evaluate, py::arg("y"), py::arg("parser"));
+    py::class_<LinearRegressionProblem, OptimizationProblem>(m, "LinearRegressionProblem")
+        .def(py::init<const std::vector<double>>(),
+            py::arg("theta"))
+        .def("compute_yhat", &compute_yhat, py::arg("theta"));
     
-    // Explicit instantion of the template methods for each derived class
-    m.def("IntegrateMidpoint", &Integrate<Midpoint>,
-        py::arg("function"), py::arg("method"));
-    m.def("IntegrateTrapezoidal", &Integrate<Trapezoidal>,
-        py::arg("function"), py::arg("method"));
+    py::class_<GradientDescent>(m, "GradientDescent")
+        .def(py::init<const T&>(),
+            py::arg("problem"))
+        .def("set_learningRate", &set_learningRate, py::arg("learningRate"))
+        .def("set_maxIterations", &set_maxIterations, py::arg("iterations"))
+        .def("set_convergenceThreshold", &set_convergenceThreshold, py::arg("convergenceThreshold"))
+        .def("optimize", &optimize)
+        .def("getSolution", &getSolution, py::arg("solution"));
 }

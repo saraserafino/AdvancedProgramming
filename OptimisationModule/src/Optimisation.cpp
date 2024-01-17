@@ -6,31 +6,50 @@
 namespace optimization {
 
 // Constructor of the abstract class
-OptimizationProblem::OptimizationProblem(const std::vector<double> &input) : input(input) {};
+OptimizationProblem::OptimizationProblem(const std::vector<double> &theta) : theta(theta) {};
 
 
 // Derived classes from OptimizationProblem
 
-QuadraticOptimizationProblem::QuadraticOptimizationProblem ();
-
-double QuadraticOptimizationProblem::evaluate(const std::vector<double> &input) {
-    return input[0] * input[0] + input[1] * input[1];
+double QuadraticOptimizationProblem::evaluate(const std::vector<double> &theta) {
+    return (theta[0] - 1) * (theta[0] - 1);
 };
 
-std::vector<double> QuadraticOptimizationProblem::evaluate_gradient(const std::vector<double> &input) {
-    return {2 * input[0], 2 * input[1]};
+std::vector<double> QuadraticOptimizationProblem::evaluate_gradient(const std::vector<double> &theta) {
+    return {2 * theta[0] - 2}; // derivate
 };
 
 
+std::vector<double> LinearRegressionProblem::compute_yhat(const std::vector<double> &theta);
+    // Compute y hat
+    std::vector<double> yhat;
+    yhat[0] = theta[0];
+    for (int i = 1; i < x.size(); ++i) {
+        yhat[i] = theta[i] * x[i];
+    }
+    return yhat;
 
-LinearRegressionProblem::LinearRegressionProblem ();
-
-double LinearRegressionProblem::evaluate(const std::vector<double> &input) {
-    return (input[0] - 2) * (input[0] - 2) + (input[1] + 3) * (input[1] + 3);
+double LinearRegressionProblem::evaluate(const std::vector<double> &theta) {
+    int m = theta.size();
+    // Compute y hat
+    std::vector<double> yhat = compute_yhat(theta);
+    // J(theta)
+    double sum = 0;
+    for (int i = 0; i < m; ++i) {
+        sum += ( ((yhat[i]) - (y[i])) * ((yhat[i]) - (y[i])) );
+    }
+    return sum / (2 * m);
 };
 
-std::vector<double> LinearRegressionProblem::evaluate_gradient(const std::vector<double> &input) {
-    return {2 * (input[0] - 2), 2 * (input[1] + 3)};
+std::vector<double> LinearRegressionProblem::evaluate_gradient(const std::vector<double> &theta) {
+    std::vector<double> yhat = compute_yhat(theta);
+    // dJ(theta)
+    int m = theta.size();
+    double sum = 0;
+    for (int i = 0; i < m; ++i) {
+        sum += ( ((yhat[i]) - (y[i])) * x[i] );
+    }
+    return sum / m;
 };
 
 
@@ -39,9 +58,6 @@ template <typename T> GradientDescent::GradientDescent(const T& problem)
 
 
 std::vector<double> GradientDescent::optimize() const {
-    double learningRate = this->learningRate;
-    int iterations = this->iterations;
-    double convergenceThreshold = this->convergenceThreshold;
     // Initialize the solution to 0
     std::vector<double> current_solution(problem.evaluate_gradient(std::vector<double>(0)));
     for (int iteration = 0; iteration < iterations; ++iteration) {
@@ -63,19 +79,19 @@ std::vector<double> GradientDescent::optimize() const {
 };
 
 void GradientDescent::set_learningRate(double learningRate) {
-    this.learningRate = learningRate;
+    this->learningRate = learningRate;
 };
 
 void GradientDescent::set_maxIterations(int maxIterations) {
-    this.iterations = maxIterations;
+    this->iterations = maxIterations;
 };
 
 void GradientDescent::set_convergenceThreshold(double convergenceThreshold) {
-    this.convergenceThreshold = convergenceThreshold;
+    this->convergenceThreshold = convergenceThreshold;
 };
 
 double GradientDescent::getSolution(const std::vector<double>& solution) const {
-    return problem.evaluate(solution);
+    return problem.optimize(solution);
 }
 
 } // end of namespace
