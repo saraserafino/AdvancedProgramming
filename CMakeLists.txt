@@ -19,16 +19,10 @@ find_package(pybind11 REQUIRED)
 include_directories(SYSTEM ${pybind11_INCLUDE_DIRS})
 
 # Add the Python modules
-pybind11_add_module(moduleC
-    NumericalIntegrationModule/src/IntegrationMethods.cpp
-    NumericalIntegrationModule/include/moduleCfunctions.tpl.hpp
-    NumericalIntegrationModule/src/moduleCfunctions_py.cpp
-    )
-
-pybind11_add_module(moduleA
-    StatisticsModule/src/DataHandler_py.cpp
-    StatisticsModule/src/DataHandler.cpp
-    StatisticsModule/src/StatOp.cpp
+pybind11_add_module(GradientDescent
+OptimisationModule/src/Optimisation.cpp
+OptimisationModule/include/Optimisation.hpp
+OptimisationModule/src/Optimisation_py.cpp
     )
 
 target_link_libraries(moduleC PRIVATE ${MUPARSERX_LIBRARY})

@@ -96,7 +96,7 @@ setup(
     version="0.0.1",
     description="An exam project using pybind11 and CMake",
     long_description="",
-    ext_modules=[CMakeExtension("module1"), CMakeExtension("module2")],
+    ext_modules=[CMakeExtension("optimization")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
 )

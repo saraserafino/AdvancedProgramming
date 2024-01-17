@@ -124,6 +124,22 @@ public:
 ```
 
 ## Answer
+I would do the following unit tests:
+Call calculate_circle_area with a negative value and check that I get std::invalid_argument exception, to assess that a negative radius is correctly handled.
+Call calculate_circle_area with some positive radius values and assess that the method returns the correct area. To be sure, I would also check that the absolute difference between the actual value and the expected value is less than a small threshold (for example 10 to the power of -9). 
+```cpp
+std::vector<double> radiuses {0,1,2,4,8,55};
+std::vector<double> expected {0, 3.14159, 12.56636, 50.26544, 201.06176, 9503.30975};
+Geometry g;
+const double threshold = 1e-9;
+unsigned int i = 0;
+for(double& radius : radiuses){
+	double actual = g.calculate_circle_area(radius);
+	assertLess(std::abs(expected[I] - actual), threshold);
+}
+```
+I would then call calculate_rectangle_area with a negative value for height, then call it with a negative value for width, and finally call it with both negative values for height and width. Every time it must throw `std::invalid_argument exception` to assess that negative rectangle sides are correctly handled.
+Repeat what done for calculate_circle_area with calculate_rectangle_area, with an array of pairs of height and width and an array of expected areas. Every time the difference between the actual area and the expected area must be lower than a small threshold.
 
 
 ---
