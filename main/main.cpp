@@ -1,26 +1,24 @@
-#include "../StatisticsModule/include/StatOp.hpp"
-#include "../StatisticsModule/include/DataHandler.hpp"
-#include "../NumericalIntegrationModule/include/IntegrationMethods.hpp"
-#include "../NumericalIntegrationModule/include/moduleCfunctions.hpp"
-#include "muparserx/mpParser.h"
+#include "../include/Optimisation.hpp"
 #include <iostream>
 #include <vector>
-#include <iomanip>
 
 int main() {
+    QuadraticOptimizationProblem quadraticProblem;
+    GradientDescent quadraticSolver(quadraticProblem);
+    quadraticSolver.setLearningRate(0.1);
+    quadraticSolver.setMaxIterations(1000);
+    quadraticSolver.setConvergenceThreshold(1e-6);
 
-    
-    // File path
-    const std::string input_file_path = "../data/player_data_03_22.csv";
-    // Create shared pointer
-    const std::shared_ptr<CSVHandler> CSVfile = std::make_shared<CSVHandler>(input_file_path);
+    try {
+        std::vector<double> solution = quadraticSolver.solve();
+        double finalCost = quadraticSolver.getFinalCost(solution);
 
-    StatOp analysis(CSVfile);
-
-    std::vector<std::string> headerNames = CSVfile->getHeader();
-
-    // Create the output path outside the loop, otherwise it creates it for every cycle, overwriting the results
-    CSVfile->create_output_path();
+        std::cout << "Quadratic Optimization Result:" << std::endl;
+        std::cout << "Solution: [" << solution[0] << ", " << solution[1] << "]" << std::endl;
+        std::cout << "Final Cost: " << finalCost << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 
     return 0;
 }

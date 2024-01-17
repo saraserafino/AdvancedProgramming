@@ -135,7 +135,7 @@ const double threshold = 1e-9;
 unsigned int i = 0;
 for(double& radius : radiuses){
 	double actual = g.calculate_circle_area(radius);
-	assertLess(std::abs(expected[I] - actual), threshold);
+	assertLess(std::abs(expected[radius] - actual), threshold);
 }
 ```
 I would then call calculate_rectangle_area with a negative value for height, then call it with a negative value for width, and finally call it with both negative values for height and width. Every time it must throw `std::invalid_argument exception` to assess that negative rectangle sides are correctly handled.
@@ -179,6 +179,13 @@ In Python, what is the difference between positional and keyword arguments?<br>
 How to enforce that a function receives an input parameter of a _given_ type (e.g., an integer or a string)?
 
 ## Answer
+A positional argument is an argument of a function which is passed via the position of it in the function call. For example 
+```python
+def function(arg, arg2):
+	pass
+function(12,”arg”)
+```
+12 and “arg” will be positional arguments
 
 
 ---
@@ -204,6 +211,9 @@ def square_elements(my_list):
 ```
 
 ## Answer
+It is enough to write np.square(my_list) and the function np.square will return a numpy array containing the squared elements of the list.
+Vectorizing functions using numpy leads to a faster code because numpy is highly optimised. Moreover, the output is a numpy array, which can be concatenated with other numpy operations.
+Some disadvantages might be the fact that it is more difficult to debug vectorized code.
 
 
 ---
