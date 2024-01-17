@@ -185,7 +185,11 @@ def function(arg, arg2):
 	pass
 function(12,”arg”)
 ```
-12 and “arg” will be positional arguments
+12 and “arg” will be positional arguments.
+Keyword arguments are arguments passed to the function via their name, independent of the position of it in the function call. For example:
+`function(arg2=“arg”,arg1=12)`. Here the arguments have the same value but they have been passed to the function independently of the position.
+In python you can indicate which type is expected using this notation `def function(arg: type), for example def function(arg: int) `.
+To enforce you could assert that an argument is an instance of a specific type: `assert isinstance(arg,type)`
 
 
 ---
