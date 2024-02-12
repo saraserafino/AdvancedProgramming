@@ -19,19 +19,6 @@ Before showing every plot, the user is asked to press enter, in this way they do
   title
 </p>
 
-## Numerical integration module
-`moduleCfunctions_py.cpp` provides a Python interface and binding with Pybind11, creating a module called moduleC. Everything is unchanged except for the GaussLegendre method, which is implemented with NumPy (in `IntegrationMethods.py`).
-When possible thanks to SciPy integrate functions, a comparison between ... and time execution (thanks to a time decorator).
-
-### Analysis and observations
-
-<br>
-<p align="center">
-  <img src="NumericalIntegrationModule/images/AverageConvergenceOrder.png" /><br>
- title
-</p>
-
-
 ## CMake and libraries
 A CMake for the creation of the modules is provided. Also a setup.py is provided, creating a Python package easily installable via pip.
 Some Python packages were used: NumPy, SciPy MatPlotLib, seaborn, pandas, tabulate. They can be installed with `pip install [names] --user`.<br>

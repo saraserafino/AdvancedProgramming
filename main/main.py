@@ -1,6 +1,11 @@
 # Import the module created with pybind11
 import optimization
 
+from scipy.optimize import minimize_scalar # for comparing problem 1
+from scipy.stats import linregress # for comparing problem 2
+from tabulate import tabulate # for a cute table of results
+import random # for epsilon
+
 import numpy as np
 import math
 import pandas as pd
@@ -18,20 +23,6 @@ def execution_time(func):
         executionTime = time.time() - start
         return result, executionTime
     return wrapper
-
-# Definitions of the statistics methods both in C++ and in Python
-
-@execution_time
-def test_calculateMean_cpp(StatOpInstance, data):
-    return StatOpInstance.calculateMean(data)
-
-@execution_time
-def test_calculateMean_py(data):
-    # If there's even a string
-    if any(isinstance(value, str) for value in data):
-        raise TypeError("Cannot calculate mean for a string.")
-    # Otherwise compute it with NumPy
-    return np.mean(data)
 
 # Plot the frequency with a bar plot
 def barplotFrequency(frequency, name):
@@ -89,9 +80,51 @@ def catplotCompare(results, deltas, name):
 # ----------------
 # main
 # ----------------
-    
-QuadraticOptimizationProblem = optimization.QuadraticOptimizationProblem
-LinearRegressionProblem = optimization.LinearRegressionProblem
-quadraticSolver.setLearningRate(0.1)
-quadraticSolver.setMaxIterations(1000)
-quadraticSolver.setConvergenceThreshold(1e-6)
+
+print("Problem 1 requires to minimize the scalar quadratic function f(x)=(x-1)^2 with learning rate 0.1")
+exact_solution = 1
+exact_function = (exact_solution - 1)**2
+
+# Compute solution and the value of the function in that solution with C++
+@execution_time
+def QO_cpp():
+    # Create instances of the quadratic optimisation problem and its gradient descent
+    QOproblem = optimization.QuadraticOptimizationProblem(1) # dimension
+    QOGradDesc = optimization.GradientDescentQuadraticOptimization(QOproblem)
+
+    # Change the learning rate to the required one
+    QOGradDesc.set_learningRateQuadraticOptimizationProblem(0.1)
+    solution_cpp, constfunction_cpp = QOGradDesc.get_solutionsQuadraticOptimizationProblem()
+    return solution_cpp, constfunction_cpp
+
+# Results of C++
+solution, constfunction_cpp, timeQO_cpp = QO_cpp()
+solution_cpp = solution[0]
+
+# Compute the error with respect to the exact solution
+error_cpp = abs((solution_cpp - exact_solution))
+
+# Validate and compare the results of Problem 1 against the minimize_scalar function of scipy.optimize
+@execution_time
+def QO_py():
+    f = lambda x: (x - 1)**2 # define the function to minimize
+    res = minimize_scalar(f)
+    solution_py = res.x
+    constfunction_py = res.fun
+    return solution_py, constfunction_py
+
+# Results of Python
+solution_py, constfunction_py, timeQO_py = QO_py()
+
+# Compute the error with respect to the exact solution
+error_py = abs((solution_py - exact_solution))
+
+# Prepare the results to be printed in a more uniform way with tabulate
+header = ["", "Exact", "C++", "Python"]
+data = [
+        ["Solution", exact_solution, round(solution_cpp, 4), round(solution_py, 4)],
+        ["Value of the function", round(exact_function, 4), round(constfunction_cpp, 4), round(constfunction_py, 4)],
+        ["Error", None, round(error_cpp, 4), round(error_py, 4)],
+        ["Execution time (s)", None, round(timeQO_cpp, 4), round(timeQO_py, 4)]
+        ]
+print(tabulate(data, header, tablefmt = "fancy_grid"))

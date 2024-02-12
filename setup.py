@@ -34,8 +34,8 @@ class CMakeBuild(build_ext):
             "-DPYTHON_EXECUTABLE={}".format(sys.executable),
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
             #"-Deigen3_DIR=/opt/eigen3/share/cmake/eigen3"
-            "-DBOOST_ROOT=/opt/boost",
-            "-Dmuparserx_DIR=/opt/muparserx/share/cmake/muparserx"
+            #"-DBOOST_ROOT=/opt/boost",
+            #"-Dmuparserx_DIR=/opt/muparserx/share/cmake/muparserx"
         ]
         build_args = []
 
