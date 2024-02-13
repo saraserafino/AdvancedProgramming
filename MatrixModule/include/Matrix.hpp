@@ -39,9 +39,9 @@ class TridiagonalMatrix : public Matrix {
     ~TridiagonalMatrix() {}; // Default destructor
 
 protected:
-std::vector<double> &a; // subdiagonal
-std::vector<double> &b; // diagonal
-std::vector<double> &c; // superdiagonal
+std::vector<double> a; // subdiagonal
+std::vector<double> b; // diagonal
+std::vector<double> c; // superdiagonal
 };
 
 } // end of namespace

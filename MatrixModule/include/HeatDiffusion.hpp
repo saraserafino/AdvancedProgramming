@@ -10,16 +10,18 @@ namespace matrix {
 class HeatDiffusion: public TridiagonalMatrix {
 public:
     // Constructor
-    HeatDiffusion(unsigned int &dimension, const double &initialTemperature,
-                  const double &boundaryCondition1, const double &boundaryCondition2,
-                  const std::vector<double>& forcingTerm);
+    HeatDiffusion(unsigned int &dimension, double &initialTemperature,
+                const double &boundaryCondition1, const double &boundaryCondition2);
     std::vector<double> solveH(std::vector<double> &f);
     virtual ~HeatDiffusion() {}; // Virtual destructor
 
 protected:
 unsigned int &dimension;
+std::vector<double> a; // subdiagonal
+std::vector<double> b; // diagonal
+std::vector<double> c; // superdiagonal
 double dx;     // Spatial step size
-const double initialTemperature; // Initial temperature
+double initialTemperature; // Initial temperature
 const double boundaryCondition1; // Boundary condition for u(0)
 const double boundaryCondition2; // Boundary condition for u(L)
 std::vector<double> forcingTerm; // Forcing term i.e. f(x)
