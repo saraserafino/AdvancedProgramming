@@ -5,6 +5,26 @@ Describe a specific task you automated using a shell script.<br>
 What was the task, and how did your script improve the process? Share the script and explain its functionality.
 
 ## Answer
+In the first homework for this course, I used a shell script in order to build everything together. The task of the homework was to create a base class SparseMatrix and its two derived classes SparseMatrixCOO and SparseMatrixCSR that allow you to write a sparse matrix with two different methods.
+My build.sh improved the process allowing me to build what required faster and in a more efficient way. The build.sh was:
+```bash
+#!/bin/bash
+set -x
+mkdir -p build
+g++ -std=c++17 -Iinclude/ src/SparseMatrix.cpp -c -o build/SparseMatrix.o
+g++ -std=c++17 -Iinclude/ src/SparseMatrixCOO.cpp -c -o build/SparseMatrixCOO.o
+g++ -std=c++17 -Iinclude/ src/SparseMatrixCSR.cpp -c -o build/SparseMatrixCSR.o
+g++ -std=c++17 -Iinclude/ src/main.cpp -c -o build/main.o
+g++ -std=c++17 -Wall -Wpedantic build/SparseMatrix.o build/SparseMatrixCOO.o build/SparseMatrixCSR.o build/main.o -o build/HomeworkSF
+set +x
+if [ $? -eq 0 ]; then
+    echo "Build successful! You can run the program using ./build/HomeworkSF"
+else
+    echo "Build failed."
+fi
+```
+With this, in the terminal, you first give the permissions with `chmod +x build.sh`, then write `./build.sh`, lastly run it with `./build/HomeworkSF`.
+In this way, the procedure of preprocessing and compiling (and eventually linking if there was a library) is automated, you just have to run the build file and then load the program.
 
 
 ---
@@ -14,7 +34,36 @@ Design a minimal C++ class hierarchy for a simple game engine that includes enti
 Discuss how polymorphism, inheritance, or other forms of relationship between classes can be used to organize and extend the engine.
 
 ## Answer
-
+The design might be:
+```c++
+class ActiveObject{
+    public:
+        virtual void doAction() = 0;
+        virtual void render() = 0;
+        unsigned long numPolygons;
+}
+class Item : public ActiveObject{
+    public:
+        Item() {...};
+        void doAction override{...};
+        void render() override{...};
+}
+class Player : public ActiveObject{
+    public:
+        Player() {};
+        void doAction override{...};
+        void render() override{...};
+}
+class Enemy : public ActiveObject{
+    public:
+        Enemy() {};
+        virtual void doAction override{...};
+        void render() override{...}
+}
+```
+Where ActiveObject is an abstract base class which represents a rendered object capable of performing an action. All the ohter classes inherit from this base class.
+- Polymorphism can be used for example when all the object in a scene must perform their specific action. Every item of an array containing all the ActiveObjects in a scene have just to call .doAction.
+- Inheritance can be used when rendering an object. Every ActiveObject must be rendered, but in different ways. For example if the game is a "first person shooter" just the part of the player visible in the screen can be rendered (hands, legs); while an Item must always be rendered.
 
 ---
 
@@ -60,7 +109,35 @@ delete s2;
 ```
 
 ## Answer
+```c++
+class Shape {
+public:
+    virtual void print() const = 0;
+    virtual ~Shape() = default; // the virtual constructor was missing
+};
 
+class Circle : public Shape {
+public:
+    Circle(double r) : radius(r) {}
+    
+    void print() const override {
+        std::cout << "A circle with radius " << radius << "." << std::endl; // virtual is not necessary if no class inherits from Circle
+    }
+
+private:
+    double radius;
+};
+
+// You cannot instantiate an object of an abstract class
+//auto s1 = &Shape();
+//s1->print();
+
+auto s2 = new Circle(0.5);
+s2->print();
+
+//delete s1;
+delete s2;
+```
 
 ---
 
@@ -104,6 +181,8 @@ Explain how you would convert an existing `Makefile` project to use CMake, highl
 Discuss benefits and disadvantages, if any, of this transition.
 
 ## Answer
+The main benefit of using CMake instead of Makefile, is that while Makefile is platform dependent, CMake is not, thus it allows a more extended use between programmers.
+CMake can be used not only in the main directory, but it is possible to have one for each directory, separating the libraries that one creates. In this way it is also possible to use cache variables in order to decide, by terminal, if using a created module or not, setting the variable on or off. This provides a faster use since you mustn't load every library that is linked with the module. Using different directories, you have to include them with include_directories.
 
 
 ---
@@ -168,4 +247,33 @@ Is it possible to use pybind11 to execute Python code from within C++ code?<br>
 What are possible use cases in the field of data science and scientific computing?
 
 ## Answer
+Yes it is possible, I did it in the homework 3 for implementing the Gauss Legendre integration method since the one I implemented in C++ had some memory leaks. For doing so I defined its class in a slightly different way: instead of just defining the constructor in Python, I added a way to compute nodes and weights using NumPy. The code was the following
+```python
+from numpy.polynomial import legendre
+import numpy as np
 
+# ----------------
+# Python interface
+# ----------------
+
+# GaussLegendre is better implemented with NumPy
+# Note: it can only compute nodes and weights in [-1,1]
+class GaussLegendre(Quadrature):
+    def __init__(self, a, b, nBins):
+        Quadrature.__init__(self)
+        # Call numpy.polynomial.legendre.leggauss
+        self.nodes,self.weights = np.polynomial.leggauss(nBins - 1)
+```
+In the main.py, I then defined the function to compute an integral in this way:
+```python
+# For Gauss-Legendre, the interval is fixed to [-1,1] due to numpy.polynomial.legendre.leggaus's
+# definition which was overloaded in the C++ method (see IntegrationMethods.py for the overload)
+@execution_time
+def test_GaussLegendre_cpp(function, trueValue, nBins):
+    GL = moduleC.GaussLegendre(-1, 1, nBins)
+    integrationValue = moduleC.IntegrateGaussLegendre(function, GL)
+    error = abs(trueValue - integrationValue)
+    return integrationValue, error
+```
+Where moduleC was the module I created for that functions and classes.
+As I did with my code, possible use cases in the field of data science and scientific computing can be the implementation of some methods that in C++ require more compilation-time or are more complex. Moreover, Python libraries are made by experts, therefore using them you're less prone to make mistakes.
