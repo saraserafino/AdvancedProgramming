@@ -1,12 +1,18 @@
-#include "../include/Optimisation.hpp"
+#include "../include/Matrix.hpp"
 #include <iostream>
 #include <cmath>
 
 
-namespace optimization {
+namespace matrix {
 
 // Constructor of the abstract class
-OptimizationProblem::OptimizationProblem(const unsigned int dimension) : dimension(dimension) {};
+Matrix::Matrix(std::vector<double>& values, std::vector<unsigned int>& columns, std::vector<unsigned int>& rows) : dimension(dimension) {};
+
+// returns the number of columns of the matrix. For the way it's saved, the number
+// of columns is the maximum index of column of the non-zero values + 1
+unsigned int SparseMatrix::get_num_columns() const {
+    return values.empty() ? 0 : (*std::max_element(columns.begin(), columns.end()) + 1);
+}
 
 // Derived classes from OptimizationProblem
 

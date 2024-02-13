@@ -1,5 +1,4 @@
-#include "../include/Optimisation.hpp"
-#include "../include/GradientDescent.hpp"
+#include "../include/Matrix.hpp"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -8,7 +7,7 @@
 // Python interface - trampoline
 // ----------------------------------
 
-using namespace optimization;
+using namespace matrix;
 
 class PyOptimizationProblem : public OptimizationProblem {
 public:

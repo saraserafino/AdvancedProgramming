@@ -15,10 +15,9 @@ find_package(pybind11 REQUIRED)
 include_directories(SYSTEM ${pybind11_INCLUDE_DIRS})
 
 # Add the Python modules
-pybind11_add_module(optimization
-    OptimisationModule/src/Optimisation.cpp
-    OptimisationModule/include/GradientDescent.tpl.hpp
-    OptimisationModule/src/Optimisation_py.cpp
+pybind11_add_module(matrix
+    OptimisationModule/src/Matrix.cpp
+    OptimisationModule/src/Matrix_py.cpp
     )
 
-target_include_directories(optimization PRIVATE OptimisationModule/include)
+target_include_directories(matrix PRIVATE MatrixModule/include)
