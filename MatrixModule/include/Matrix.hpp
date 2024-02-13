@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector>
-#include <random> // for generating random numbers
 
 namespace matrix {
 
@@ -36,10 +35,10 @@ class TridiagonalMatrix : public Matrix {
 
     // Override it to implement the Thomas algorithm
     std::vector<double> solve(std::vector<double> &f) override;
-    
+
     ~TridiagonalMatrix() {}; // Default destructor
 
-private:
+protected:
 std::vector<double> &a; // subdiagonal
 std::vector<double> &b; // diagonal
 std::vector<double> &c; // superdiagonal

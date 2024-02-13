@@ -41,6 +41,7 @@ class ActiveObject{
         virtual void doAction() = 0;
         virtual void render() = 0;
         unsigned long numPolygons;
+        virtual ~ActiveObject() = default; 
 }
 class Item : public ActiveObject{
     public:
@@ -72,7 +73,21 @@ Provide an example of how you've used a functor or lambda function in C++ to sim
 Explain your choice and its benefits.
 
 ## Answer
-
+For example, I used a lambda function in the second assignemnt of the course. In the statistic operations module, when I needed to compute the median of a column of a dataset, I had to sort the column to find the median value. What I did was:
+```cpp
+// Sorting the data based on the index of the variant
+    std::sort(sortedData.begin(), sortedData.end(), [](const auto &a, const auto &b) {
+        if (a.index() == 0 && b.index() == 0) {
+            return std::get<double>(a) < std::get<double>(b);
+        } else if (a.index() == 1 && b.index() == 1) {
+            return std::get<std::string>(a) < std::get<std::string>(b);
+        } else {
+            // If they're different types, sort by index
+            return a.index() < b.index();
+        }
+    });
+```
+Since the column had either `double` or `std::string` values, I had to create a custom comparator with a lambda function, which checked the type of the values that were compared. If they were `double`, I compared them by their value. If they were `std::string`, I compared them by the < operator of the `std::string` class. Using the STL and lambdas was very convinient, as I did not need to write my sorting algorithm, but just define a custom comparator "on the fly". The code was more readable and I could use a sorting algorithm which has been implemented to be very efficient, which is a great advantage considering that the dataset was quite large.
 
 ---
 
@@ -216,7 +231,7 @@ Share your experience with debugging or profiling a performance issue in a C++ o
 Which tools or techniques did you use, and how did you resolve the issue?
 
 ## Answer
-
+After the first exam, I tried to do again at home the second part, which involved the implementation of the Gradient Descent algorithm. The class was not working well, it was not converging at all. So I tried to use the gdbc tool in order to debug the `optimize` function. I put a breakpoint in the function and then checked the value of the maximum number of iterations to check if they were correctly set. Using `print maxIterations` gave me value 0, so the algorithm was not executing even one iteration. Thanks to the debugger I narrowed the problem down, and discovered that I did not set correctly the algotithm parameters. After fixing this issue, the algorithm worked as expected.
 
 ---
 

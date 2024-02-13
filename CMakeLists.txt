@@ -17,6 +17,7 @@ include_directories(SYSTEM ${pybind11_INCLUDE_DIRS})
 # Add the Python modules
 pybind11_add_module(matrix
     OptimisationModule/src/Matrix.cpp
+    OptimisationModule/src/HeatDiffusion.cpp
     OptimisationModule/src/Matrix_py.cpp
     )
 
