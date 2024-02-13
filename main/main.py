@@ -1,5 +1,5 @@
 # Import the module created with pybind11
-import optimization
+import matrix
 
 from scipy.optimize import minimize_scalar # for comparing problem 1
 from scipy.stats import linregress # for comparing problem 2

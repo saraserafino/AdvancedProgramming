@@ -225,7 +225,22 @@ Explain the difference between list comprehensions and generator expressions in 
 Give an example of a scenario where using a generator would be significantly more memory-efficient than a list comprehension.
 
 ## Answer
-
+Both list comprehensions and generator expression could be used to create lists based on some conditions or specific functions to apply to every item. List comprehensions actually creates the whole list, like here:
+```python
+l = [0,1,2,5,100]
+l2 = [x**2 for x in l]
+for value in l2:
+    print(l2)
+```
+l2 will contain all the squared values of the original list l.
+If a generator expression is used:
+```python
+l = [0,1,2,5,100]
+l2 = (x**2 for x in l)
+for value in l2:
+    print(l2)
+```
+l2 would not contain the squared values but it would generate them at every iteration of the for cycle, so just when needed. In this way generator expressions are much more memory efficient than list comprehensions. For example when processing a very large dataset, generator expressions would be the perfect fit, since there would not be necessary to load the entirety of the dataset into memory, but just process its records when needed.
 
 ---
 
@@ -262,7 +277,10 @@ class ChildClass(BaseClass):
 ```
 
 ## Answer
-
+The decorator modifies the original method of a class if a method with that name is present in the class. Otherwise, it adds the method to the class.
+- When `BaseClass` calls `greet()` it outputs `Modified behavior: Hello from BaseClass` because the method is already present.
+- When `ChildClass` calls `greet()` it outputs `Modified behavior: Modified behavior: Hello from BaseClass` because the method has been inherited by the BaseClass and was modified originally by the decorator.
+- When `ChildClass` calls `farewell()` it outputs `Modified behavior: Goodbye from ChildClass` because the method is already present but just in the ChildClass.
 
 ---
 

@@ -11,36 +11,38 @@ namespace matrix {
 class Matrix {
 public:
     // Constructor
-    Matrix(std::vector<double>& values, std::vector<unsigned int>& columns, std::vector<unsigned int>& rows);
+    Matrix(unsigned int &dimension);
 
-    virtual double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const = 0;
-    //virtual std::vector<double> operator* (const std::vector<double>& vect) const = 0;
-    virtual void print_matrix() const = 0;
+    double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const;
+    void print_matrix(const Matrix& mat) const;
+
     // Method that solves a linear system given a right hand side f and returns its solution
-    virtual std::vector<double> solve(const std::vector<double> &f);
+    virtual std::vector<double> solve(std::vector<double> &f);
     
     unsigned int get_num_rows() const;
     unsigned int get_num_columns() const;
     virtual ~Matrix() {}; // Virtual destructor
 
 protected:
-// the vector values contains all the values
-std::vector<double> values;
-std::vector<unsigned int> columns;
-std::vector<unsigned int> rows;
+unsigned int &dimension;
+std::vector<double> data;
 };
 
 
 // Derived classes from Matrix
 
 class TridiagonalMatrix : public Matrix {
-    TridiagonalMatrix(const unsigned int dimension, const unsigned int num_points);
+    TridiagonalMatrix(std::vector<double> &a, std::vector<double> &b, std::vector<double> &c);
+
     // Override it to implement the Thomas algorithm
-    std::vector<double> solve(const std::vector<double> &f) override;
+    std::vector<double> solve(std::vector<double> &f) override;
+    
     ~TridiagonalMatrix() {}; // Default destructor
 
 private:
-
+std::vector<double> &a; // subdiagonal
+std::vector<double> &b; // diagonal
+std::vector<double> &c; // superdiagonal
 };
 
 } // end of namespace

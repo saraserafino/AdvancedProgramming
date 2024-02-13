@@ -6,66 +6,59 @@
 namespace matrix {
 
 // Constructor of the abstract class
-Matrix::Matrix(std::vector<double>& values, std::vector<unsigned int>& columns, std::vector<unsigned int>& rows) : dimension(dimension) {};
+Matrix::Matrix(unsigned int &dimension) : dimension(dimension), data(dimension * dimension) {};
 
-// returns the number of columns of the matrix. For the way it's saved, the number
-// of columns is the maximum index of column of the non-zero values + 1
 unsigned int Matrix::get_num_columns() const {
-    return values.empty() ? 0 : (*std::max_element(columns.begin(), columns.end()) + 1);
+    return dimension;
 }
 
-// Returns the number of rows of the matrix. For the way it's saved,
-// the number of rows is the maximum index of row of the the non-zero values + 1
 unsigned int Matrix::get_num_rows() const {
-  return values.empty() ? 0 : (*std::max_element(rows.begin(), rows.end()) + 1);
+  return dimension;
 }
 
-// Since it's const, it doesn't return the reference but the value
+// It returns the value of the element in row = input_row_idx and column = input_col_idx
 double Matrix::operator()(unsigned int input_row_idx, unsigned int input_col_idx) const {
-  if(input_row_idx >= this->get_num_rows() || input_col_idx >= this->get_num_columns()) {
+    if(input_row_idx >= this->get_num_rows() || input_col_idx >= this->get_num_columns() || input_row_idx < 0 || input_col_idx < 0) {
     throw std::out_of_range ("Indexes out of range");
-  }
-
-  for(int i = 0; i < values.size(); ++i)
-    if(rows[i] == input_row_idx && columns[i] == input_col_idx)
-      return values[i];
-
-  return 0.0;
+    }
+    return data[input_row_idx * dimension + input_col_idx];
 }
 
-// Derived classes from OptimizationProblem
+void Matrix::print_matrix(const Matrix& mat) const {
+    for (unsigned int i = 0; i < mat.get_num_rows(); ++i) {
+        for (unsigned int j = 0; j < mat.get_num_columns(); ++j) {
+            std::cout << mat(i, j) << " ";
+        }
+        std::cout << std::endl;
+    }
+}:
 
-// Constructor for setting also the number of points
-LinearRegressionProblem::LinearRegressionProblem(const unsigned int dimension, const unsigned int num_points)
-    : OptimizationProblem(dimension), num_points(num_points) {
-        generate_random_points(num_points);
-    };
+// Derived class from Matrix
 
-double LinearRegressionProblem::evaluate(const std::vector<double> &theta) const {
+TridiagonalMatrix::TridiagonalMatrix(std::vector<double> &a, std::vector<double> &b, std::vector<double> &c)
+        : Matrix(a.size()), a(a), b(b), c(c) {};
+// Assuming a, b, c have same size
 
-};
 
-std::vector<double> LinearRegressionProblem::evaluate_gradient(const std::vector<double> &theta) const {
-    
-};
-
-// Method for generating random points x between -50 and 50
-void LinearRegressionProblem::generate_random_points(unsigned int num_points) {
-    x.resize(num_points);
-    y.resize(num_points, 4.0);
-
-    // Generate random numbers
-    std::random_device rd;
-    std::default_random_engine gen(rd());
-    std::uniform_real_distribution<double> dis(-10, 10);
-
-    // Generate random noise
-    std::normal_distribution<double> noise_dis(0.0, 0.1);
-
-    // Generate random point x, y = 4 + x/2 + epsilon
-    for (int i = 0; i < num_points; ++i) {
-        x[i] = dis(gen);
-        y[i] += ( x[i]/2.0 + noise_dis(gen));
+std::vector<double> TridiagonalMatrix::solve(std::vector<double> &f) {
+    // Check size compatibility via exception handling
+    if (f.size() != dimension) {
+        throw std::invalid_argument("Right-hand side vector size f does not match matrix dimensions.");
+    }
+    // Create the unknown vector
+    std::vector<double> u(dimension);
+    // Step 1
+    for (unsigned int i = 1; i < dimension; ++i) {
+        double m = a[i] / b[i - 1];
+        b[i] = b[i] - m * c[i - 1];
+        f[i] = f[i] - m * f[i - 1];
+    }
+    // Step 2
+    u[dimension - 1] = f[dimension - 1] / b[dimension - 1];
+    unsigned int i = dimension - 1;
+    while (i > 1) {
+        u[i - 1] = ( f[i - 1] - c[i - 1] * u[i] ) / b[i - 1];
+        i -= 1;
     }
 };
 
