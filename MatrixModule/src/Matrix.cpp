@@ -6,7 +6,9 @@
 namespace matrix {
 
 // Constructor of the abstract class
-Matrix::Matrix(unsigned int &dimension) : dimension(dimension), data(dimension * dimension) {};
+Matrix::Matrix(int dimension) : dimension(dimension) {
+    data.resize(dimension*dimension);
+};
 
 unsigned int Matrix::get_num_columns() const {
     return dimension;
@@ -31,7 +33,7 @@ void Matrix::print_matrix(const Matrix& mat) const {
         }
         std::cout << std::endl;
     }
-}:
+};
 
 // Derived class from Matrix
 

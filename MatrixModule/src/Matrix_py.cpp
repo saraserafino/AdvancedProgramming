@@ -34,23 +34,20 @@ PYBIND11_MODULE(matrix, m) {
     m.doc() = "pybind11 matrix plugin";
 
     py::class_<Matrix, PyMatrix>(m, "Matrix")
-        .def(py::init<unsigned int>(),
-            py::arg("dimension"));
+        .def(py::init<int>(),
+            py::arg("dimension"))
+        .def("operator()", &Matrix::operator())
+        .def("print_matrix", &Matrix::print_matrix)
+        .def("get_num_rows", &Matrix::get_num_rows)
+        .def("get_num_columns", &Matrix::get_num_columns);
 
     py::class_<TridiagonalMatrix, Matrix>(m, "TridiagonalMatrix")
         .def(py::init<std::vector<double>, std::vector<double>, std::vector<double>>(),
             py::arg("a"), py::arg("b"), py::arg("c"));
         
-    py::class_<HeatDiffusion, TridiagonalMatrix>(m, "HeatDiffusion")
-        .def(py::init<const unsigned int, const unsigned int>(),
-            py::arg("dimension"), py::arg("num_points"))
-        .def("generate_random_points", &LinearRegressionProblem::generate_random_points, py::arg("num_points"));
-    
-    py::class_<GradientDescent<LinearRegressionProblem>>(m, "GradientDescentLinearRegression")
-        .def(py::init<const LinearRegressionProblem&>(), py::arg("LinearRegressionProblem"))
-        .def("set_learningRateLinearRegressionProblem", &GradientDescent<LinearRegressionProblem>::set_learningRate, py::arg("learningRate"))
-        .def("set_maxIterationsLinearRegressionProblem", &GradientDescent<LinearRegressionProblem>::set_maxIterations, py::arg("iterations"))
-        .def("set_convergenceThresholdLinearRegressionProblem", &GradientDescent<LinearRegressionProblem>::set_convergenceThreshold, py::arg("convergenceThreshold"))
-        .def("optimizeLinearRegressionProblem", &GradientDescent<LinearRegressionProblem>::optimize, py::arg("problem"))
-        .def("get_solutionsLinearRegressionProblem", &GradientDescent<LinearRegressionProblem>::get_solutions);
+    py::class_<HeatDiffusion>(m, "HeatDiffusion")
+        .def(py::init<int, double, const double, const double>(),
+            py::arg("dimension"), py::arg("initialTemperature"),
+            py::arg("boundaryCondition1"), py::arg("boundaryCondition2"))
+        .def("solveH", &HeatDiffusion::solveH, py::arg("f"));
 }

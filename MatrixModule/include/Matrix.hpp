@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include "../include/HeatDiffusion.hpp"
 
 namespace matrix {
 
@@ -10,7 +11,7 @@ namespace matrix {
 class Matrix {
 public:
     // Constructor
-    Matrix(unsigned int &dimension);
+    Matrix(int dimension);
 
     double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const;
     void print_matrix(const Matrix& mat) const;
@@ -23,7 +24,7 @@ public:
     virtual ~Matrix() {}; // Virtual destructor
 
 protected:
-unsigned int &dimension;
+int dimension;
 std::vector<double> data;
 };
 
@@ -31,6 +32,7 @@ std::vector<double> data;
 // Derived classes from Matrix
 
 class TridiagonalMatrix : public Matrix {
+    friend class HeatDiffusion;
     TridiagonalMatrix(std::vector<double> &a, std::vector<double> &b, std::vector<double> &c);
 
     // Override it to implement the Thomas algorithm

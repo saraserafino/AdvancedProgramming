@@ -7,16 +7,15 @@
 
 namespace matrix {
 
-class HeatDiffusion: public TridiagonalMatrix {
+class HeatDiffusion {
 public:
     // Constructor
-    HeatDiffusion(unsigned int &dimension, double &initialTemperature,
-                const double &boundaryCondition1, const double &boundaryCondition2);
+    HeatDiffusion(int dimension, double &initialTemperature, const double &boundaryCondition1, const double &boundaryCondition2);
     std::vector<double> solveH(std::vector<double> &f);
-    virtual ~HeatDiffusion() {}; // Virtual destructor
+    ~HeatDiffusion() {}; // Virtual destructor
 
 protected:
-unsigned int &dimension;
+int dimension;
 std::vector<double> a; // subdiagonal
 std::vector<double> b; // diagonal
 std::vector<double> c; // superdiagonal

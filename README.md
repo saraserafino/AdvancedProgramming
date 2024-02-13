@@ -1,6 +1,6 @@
 # part2_Serafino_Sara_SM3400292
 
-Non sono riuscita a finire il progetto quindi molti file sono ancora i prototipi che avevo preparato per l'esame, compreso il readme.
+Il readme non è stato modificato, è ancora il prototipo. Setup.py e cmake funzionano, il problema è che avevo errori con pybind
 
 ## Code organization
 For each module there is a folder which separates source files from header files; the main file is in its folder called main; a cmake and a setup.py are provided and will be explained later on. When executing the main, a text file with the results and a folder `images` containing the plots is created.
