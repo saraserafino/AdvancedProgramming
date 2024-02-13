@@ -220,9 +220,8 @@ Explain how you would convert an existing `Makefile` project to use CMake, highl
 Discuss benefits and disadvantages, if any, of this transition.
 
 ## Answer
-The main benefit of using CMake instead of Makefile, is that while Makefile is platform dependent, CMake is not, thus it allows a more extended use between programmers.
-CMake can be used not only in the main directory, but it is possible to have one for each directory, separating the libraries that one creates. In this way it is also possible to use cache variables in order to decide, by terminal, if using a created module or not, setting the variable on or off. This provides a faster use since you mustn't load every library that is linked with the module. Using different directories, you have to include them with include_directories.
-
+I would firstly create a `CMakeLists.txt` file in the root directory; then in this file I would specify the minimum reuired CMake Version `cmake_minimum_required(VERSION 3.27.1)` and the `project name project(ProjectTitle)`. After this general settings, I would create a CMakeFile.txt file for every submodule that I want to create. In every CMake file I would add executables or libraries to define the targets of my project, link libraries or set compiler flags. After setting all the CMakeLists.txt files, I would create a build directory where the generated MakeFile can be used to build the project.
+Using CMake has several advantages: it is platform independent, so the project can be easily ported to different systems; CMake utilizes also a clearer and more concise way to specify build settings, which makes the project more mantainable. Especially the creation of submodules (setting cache variables on/off) gave me a great advantage when developing projects, allowing me to mantain and build seperate modules within the same project with ease.
 
 ---
 

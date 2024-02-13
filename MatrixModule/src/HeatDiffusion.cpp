@@ -3,16 +3,18 @@
 
 namespace matrix {
 
-HeatDiffusion::HeatDiffusion(double length, double time, double dx, double dt, double alpha,
-                  const std::vector<double>& initialTemperature,
-                  const std::vector<double>& boundaryConditions,
-                  const std::vector<double>& forcingTerm)
-        : length(length), time(time), dx(dx), dt(dt), alpha(alpha),
-          initialTemperature(initialTemperature),
-          boundaryConditions(boundaryConditions),
-          forcingTerm(forcingTerm) {};
+HeatDiffusion::HeatDiffusion(unsigned int &dimension, const double &initialTemperature,
+                            const double &boundaryCondition1, const double &boundaryCondition2, const std::vector<double>& forcingTerm)
+          : dimension(dimension), initialTemperature(initialTemperature),
+          boundaryCondition1(boundaryCondition1), boundaryCondition2(boundaryCondition2),
+          forcingTerm(forcingTerm) {
+    // Fill the vector domain with the equally spaced temperatures
+    std::vector<double> domain(dimension + 1);
+    double h = initialTemperature / (dimension + 1);
+    for (unsigned int i = 0; i < dimension + 1; ++i) {
+        domain[i] = i * h;
+    }
 
-HeatDiffusion::HeatDiffusion(unsigned int &dimension) : dimension(dimension) {
     // subdiagonal
     std::vector<double> a(dimension, 1);
     a[dimension - 1] = 0;
@@ -23,10 +25,11 @@ HeatDiffusion::HeatDiffusion(unsigned int &dimension) : dimension(dimension) {
     // superdiagonal
     std::vector<double> c(dimension, 1);
     c[0] = 0;
-    c[dimension - 2] = 0;
-    TridiagonalMatrix heatmatrix(a, b, c);
+    c[dimension - 1] = 0;
     };
 
-
+std::vector<double> HeatDiffusion::solveH(std::vector<double> &f) {
+    TridiagonalMatrix heatmatrix(a, b, c);
+};
 
 } // end of namespace
