@@ -13,16 +13,14 @@ public:
     // Constructor
     Matrix(std::vector<double>& values, std::vector<unsigned int>& columns, std::vector<unsigned int>& rows);
 
-    virtual double& operator()(unsigned int input_row_idx, unsigned int input_col_idx) = 0;
     virtual double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const = 0;
-    virtual std::vector<double> operator* (const std::vector<double>& vect) const = 0;
+    //virtual std::vector<double> operator* (const std::vector<double>& vect) const = 0;
     virtual void print_matrix() const = 0;
     // Method that solves a linear system given a right hand side f and returns its solution
     virtual std::vector<double> solve(const std::vector<double> &f);
     
     unsigned int get_num_rows() const;
     unsigned int get_num_columns() const;
-    unsigned int get_num_nnz() const;
     virtual ~Matrix() {}; // Virtual destructor
 
 protected:
@@ -43,12 +41,6 @@ class TridiagonalMatrix : public Matrix {
 
 private:
 
-
-
-std::vector<double> x;
-std::vector<double> y;
-std::vector<double> yhat;
-unsigned int num_points; // number of points to be generated
 };
 
 } // end of namespace

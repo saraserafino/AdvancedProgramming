@@ -10,8 +10,27 @@ Matrix::Matrix(std::vector<double>& values, std::vector<unsigned int>& columns, 
 
 // returns the number of columns of the matrix. For the way it's saved, the number
 // of columns is the maximum index of column of the non-zero values + 1
-unsigned int SparseMatrix::get_num_columns() const {
+unsigned int Matrix::get_num_columns() const {
     return values.empty() ? 0 : (*std::max_element(columns.begin(), columns.end()) + 1);
+}
+
+// Returns the number of rows of the matrix. For the way it's saved,
+// the number of rows is the maximum index of row of the the non-zero values + 1
+unsigned int Matrix::get_num_rows() const {
+  return values.empty() ? 0 : (*std::max_element(rows.begin(), rows.end()) + 1);
+}
+
+// Since it's const, it doesn't return the reference but the value
+double Matrix::operator()(unsigned int input_row_idx, unsigned int input_col_idx) const {
+  if(input_row_idx >= this->get_num_rows() || input_col_idx >= this->get_num_columns()) {
+    throw std::out_of_range ("Indexes out of range");
+  }
+
+  for(int i = 0; i < values.size(); ++i)
+    if(rows[i] == input_row_idx && columns[i] == input_col_idx)
+      return values[i];
+
+  return 0.0;
 }
 
 // Derived classes from OptimizationProblem

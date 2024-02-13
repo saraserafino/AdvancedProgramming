@@ -35,7 +35,7 @@ Discuss how polymorphism, inheritance, or other forms of relationship between cl
 
 ## Answer
 The design might be:
-```c++
+```cpp
 class ActiveObject{
     public:
         virtual void doAction() = 0;
@@ -109,7 +109,7 @@ delete s2;
 ```
 
 ## Answer
-```c++
+```cpp
 class Shape {
 public:
     virtual void print() const = 0;
@@ -172,7 +172,31 @@ int main() {
 ```
 
 ## Answer
+I would change the template definitions to accept floating point numbers, in this way
+```cpp
+#include <iostream>
+#include <type_traits>
 
+template <typename T, T N, T X, T NextX = (X + N / X) / 2>
+struct BabylonianMethod : BabylonianMethod<T, N, NextX> {};
+
+template <typename T, T N, T X>
+struct BabylonianMethod<T, N, X, X> {
+    static constexpr T value = X;
+};
+
+template <typename T, T N>
+using Sqrt = BabylonianMethod<T, N, N / 2 + 1>;
+
+int main() {
+    // Compute square root of 2.0 at compile time.
+    constexpr double sqrt2 = Sqrt<double, 2>::value;
+    std::cout << "Square root of 2 is " << sqrt2 << std::endl;
+
+    return 0;
+}
+```
+Note that there might be problems when the algorithm is converging but cannot reach the same exact value of the floating point solution. A compile-time check with a small epsilon would lead to a more stable and consistent algorithm.
 
 ---
 
