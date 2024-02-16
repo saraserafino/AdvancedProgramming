@@ -1,0 +1,3 @@
+/Users/sara/Desktop/Advanced Programming/lab exercises/lab08/ex1/build_debug/CMakeFiles/ex_mup.dir
+/Users/sara/Desktop/Advanced Programming/lab exercises/lab08/ex1/build_debug/CMakeFiles/edit_cache.dir
+/Users/sara/Desktop/Advanced Programming/lab exercises/lab08/ex1/build_debug/CMakeFiles/rebuild_cache.dir
