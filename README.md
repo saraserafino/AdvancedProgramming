@@ -7,4 +7,6 @@ This repository contains every material of the course of Advanced Programming @ 
 - a summary of some theory concepts (called flash cards)
 - an incomplete development of the two exam projects I undertook
 
+During the course, three projects have been assigned. My development of them can be found always on my GitHub page, in the repositories `SparseMatrix_bySerafino_Franzese`, `Statistics_NumericalIntegration` and `Statistics_NumericalIntegration_2.0`. The first two were developed together with another collegue, even though I fixed some mistakes of the second one in order to proceed to the development of the third.
+
 If you notice any mistake, you're kindly invited to reach me so that I can correct it.
