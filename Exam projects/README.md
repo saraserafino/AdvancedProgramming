@@ -3,7 +3,7 @@ The first one is [Gradient Descent](https://github.com/pcafrica/advanced_program
 The second one is [Thomas Algorithm for heat diffusion problem](https://github.com/pcafrica/advanced_programming_2023-2024/blob/main/exams/2024-02-13/part2.md); the installation of its module via pip is incomplete due to errors, the main.py was not even written. However I accepted the grade and didn't further develop it outside the exam.
 
 ## Code organization
-For each module there is a folder which separates source files from header files; the main file is in its folder called main; a cmake and a setup.py are provided and will be explained later on. Since both project are incomplete, the main.py contains some functions that were not used, such as plotting functions.
+For each module there is a folder which separates source files from header files; the main file is in its folder called main; a CMake and a setup.py are provided. Since both project are incomplete, the main.py contains some functions that were not used, such as plotting functions.
 
 ## CMake and libraries
 A CMake for the creation of the modules is provided. Also a setup.py is provided, creating a Python package easily installable via pip.
