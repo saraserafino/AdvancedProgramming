@@ -7,8 +7,8 @@ For each module there is a folder which separates source files from header files
 
 ## CMake and libraries
 A CMake for the creation of the modules is provided. Also a setup.py is provided, creating a Python package easily installable via pip.
-Some Python packages were used: NumPy, SciPy MatPlotLib, seaborn, pandas, tabulate. They can be installed with `pip install [names] --user`.<br>
-NumPy and SciPy are used for mathematical operations; pandas for creating dataframes and reading a CSV file; matplotlib and seaborn for plotting; tabulate to create a table of some results.
+Some Python packages were used: SciPy, tabulate. They can be installed with `pip install [names] --user`.<br>
+SciPy is used for mathematical operations; tabulate to create a table of some results.
 
 ## How to compile
 A CMake and a setup.py are provided in the main directory. Setup.py implicitly calls CMake, thus everything is ready writing:
