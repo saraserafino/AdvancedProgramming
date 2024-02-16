@@ -1,6 +1,6 @@
 # Advanced Programming
 
-This repository contains every material of the course of Advanced Programming @ UniTS/SISSA during the academic year 2023/24. More precisely it contains:
+This repository contains every material of the course of Advanced Programming @ UniTS & SISSA during the academic year 2023/24. More precisely it contains:
 - a PDF file of all the lectures provided by the teacher
 - all the laboratory exercises (solved)
 - my notes of the lectures, including the transcript of the solutions of the laboratories and my answers of simulations' and exams' theoretical questions
