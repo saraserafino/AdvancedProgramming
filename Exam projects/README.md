@@ -1,5 +1,5 @@
 # Exam projects
-The first one is [GradientDescent](https://github.com/pcafrica/advanced_programming_2023-2024/blob/main/exams/2024-01-17/part2.md) and was almost finished in order to better prepare for the subsequent session (since I refused the grade, not considering it good enough); it lacks of correctness for the Quadratic Optimisation Problem.<br>
+The first one is [Gradient Descent](https://github.com/pcafrica/advanced_programming_2023-2024/blob/main/exams/2024-01-17/part2.md) and was almost finished in order to better prepare for the subsequent session (since I refused the grade, not considering it good enough); it lacks of correctness for the Quadratic Optimisation Problem.<br>
 The second one is [Thomas Algorithm for the heat diffusion problem](https://github.com/pcafrica/advanced_programming_2023-2024/blob/main/exams/2024-02-13/part2.md); the installation of its module via pip is incomplete due to errors, the main.py was not even written. However I accepted the grade and didn't further develop it outside the exam.
 
 ## Code organization
