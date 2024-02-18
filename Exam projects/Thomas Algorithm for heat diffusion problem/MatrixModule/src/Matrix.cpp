@@ -2,8 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-
-namespace matrix {
+namespace moduleH {
 
 // Constructor of the abstract class
 Matrix::Matrix(int dimension) : dimension(dimension) {
@@ -21,7 +20,7 @@ unsigned int Matrix::get_num_rows() const {
 // It returns the value of the element in row = input_row_idx and column = input_col_idx
 double Matrix::operator()(unsigned int input_row_idx, unsigned int input_col_idx) const {
     if(input_row_idx >= this->get_num_rows() || input_col_idx >= this->get_num_columns() || input_row_idx < 0 || input_col_idx < 0) {
-    throw std::out_of_range ("Indexes out of range");
+        throw std::out_of_range ("Indexes out of range");
     }
     return data[input_row_idx * dimension + input_col_idx];
 }
@@ -37,7 +36,7 @@ void Matrix::print_matrix(const Matrix& mat) const {
 
 // Derived class from Matrix
 
-TridiagonalMatrix::TridiagonalMatrix(std::vector<double> &a, std::vector<double> &b, std::vector<double> &c)
+TridiagonalMatrix::TridiagonalMatrix(std::vector<double> a, std::vector<double> b, std::vector<double> c)
         : Matrix(a.size()), a(a), b(b), c(c) {};
 // Assuming a, b, c have same size
 
@@ -62,6 +61,7 @@ std::vector<double> TridiagonalMatrix::solve(std::vector<double> &f) {
         u[i - 1] = ( f[i - 1] - c[i - 1] * u[i] ) / b[i - 1];
         i -= 1;
     }
+    return u;
 };
 
 } // end of namespace

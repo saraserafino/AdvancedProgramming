@@ -3,7 +3,6 @@
 #include <iostream>
 #include <random>
 
-//using namespace optimization;
 namespace optimization {
 
 template <typename T> GradientDescent<T>::GradientDescent(const T& problem)

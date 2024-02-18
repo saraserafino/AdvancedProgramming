@@ -3,9 +3,8 @@
 
 #include <iostream>
 #include <vector>
-#include "../include/HeatDiffusion.hpp"
 
-namespace matrix {
+namespace moduleH {
 
 // Abstract class
 class Matrix {
@@ -29,11 +28,11 @@ std::vector<double> data;
 };
 
 
-// Derived classes from Matrix
+// Derived class from Matrix
 
 class TridiagonalMatrix : public Matrix {
-    friend class HeatDiffusion;
-    TridiagonalMatrix(std::vector<double> &a, std::vector<double> &b, std::vector<double> &c);
+public:
+    TridiagonalMatrix(std::vector<double> a, std::vector<double> b, std::vector<double> c);
 
     // Override it to implement the Thomas algorithm
     std::vector<double> solve(std::vector<double> &f) override;

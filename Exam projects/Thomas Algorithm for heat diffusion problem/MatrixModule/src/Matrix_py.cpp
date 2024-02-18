@@ -1,4 +1,5 @@
 #include "../include/Matrix.hpp"
+#include "../include/HeatDiffusion.hpp"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -7,7 +8,7 @@
 // Python interface - trampoline
 // ----------------------------------
 
-using namespace matrix;
+using namespace moduleH;
 
 class PyMatrix : public Matrix {
 public:
@@ -30,14 +31,14 @@ namespace py = pybind11;
 
 // Wrap as Python module
 
-PYBIND11_MODULE(matrix, m) {
-    m.doc() = "pybind11 matrix plugin";
+PYBIND11_MODULE(moduleH, m) {
+    m.doc() = "pybind11 moduleH plugin";
 
     py::class_<Matrix, PyMatrix>(m, "Matrix")
         .def(py::init<int>(),
             py::arg("dimension"))
-        .def("operator()", &Matrix::operator())
-        .def("print_matrix", &Matrix::print_matrix)
+        .def("operator()", &Matrix::operator(), py::arg("input_row_idx"), py::arg("input_col_idx"))
+        .def("print_matrix", &Matrix::print_matrix, py::arg("mat"))
         .def("get_num_rows", &Matrix::get_num_rows)
         .def("get_num_columns", &Matrix::get_num_columns);
 
@@ -49,5 +50,7 @@ PYBIND11_MODULE(matrix, m) {
         .def(py::init<int, double, const double, const double>(),
             py::arg("dimension"), py::arg("initialTemperature"),
             py::arg("boundaryCondition1"), py::arg("boundaryCondition2"))
-        .def("solveH", &HeatDiffusion::solveH, py::arg("f"));
+        .def("evaluate", &HeatDiffusion::evaluate, py::arg("y"), py::arg("parser"))
+        .def("solveH", &HeatDiffusion::solveH, py::arg("function"))
+        .def("validate_solution", &HeatDiffusion::validate_solution, py::arg("solution"), py::arg("exactSol"));
 }

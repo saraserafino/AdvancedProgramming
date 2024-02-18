@@ -6,19 +6,20 @@ project(project VERSION 1.0
 
 add_compile_options(-std=c++17)
 
-# Search for Boost
-#find_package(Boost 1.83 REQUIRED)
-#include_directories(${Boost_INCLUDE_DIRS})
+# Search for muparserx
+find_package(muparserx 4.0 REQUIRED)
+include_directories(${muparserx_INCLUDE_DIRS})
 
 # Search for Pybind
 find_package(pybind11 REQUIRED)
 include_directories(SYSTEM ${pybind11_INCLUDE_DIRS})
 
 # Add the Python modules
-pybind11_add_module(matrix
-MatrixModule/src/Matrix.cpp
+pybind11_add_module(moduleH
+    MatrixModule/src/Matrix.cpp
     MatrixModule/src/HeatDiffusion.cpp
     MatrixModule/src/Matrix_py.cpp
     )
 
-target_include_directories(matrix PRIVATE MatrixModule/include)
+target_link_libraries(moduleH PRIVATE ${MUPARSERX_LIBRARY})
+target_include_directories(moduleH PRIVATE MatrixModule/include)

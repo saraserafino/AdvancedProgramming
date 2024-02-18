@@ -1,7 +1,6 @@
 #ifndef GRADIENT_DESCENT_HPP_
 #define GRADIENT_DESCENT_HPP_
 
-//using namespace optimization;
 namespace optimization {
 
 template <typename T>
