@@ -11,19 +11,11 @@ Matrix::Matrix(int dimension) : dimension(dimension) {
 
 unsigned int Matrix::get_num_columns() const {
     return dimension;
-}
+};
 
 unsigned int Matrix::get_num_rows() const {
-  return dimension;
-}
-
-// It returns the value of the element in row = input_row_idx and column = input_col_idx
-double Matrix::operator()(unsigned int input_row_idx, unsigned int input_col_idx) const {
-    if(input_row_idx >= this->get_num_rows() || input_col_idx >= this->get_num_columns() || input_row_idx < 0 || input_col_idx < 0) {
-        throw std::out_of_range ("Indexes out of range");
-    }
-    return data[input_row_idx * dimension + input_col_idx];
-}
+    return dimension;
+};
 
 void Matrix::print_matrix(const Matrix& mat) const {
     for (unsigned int i = 0; i < mat.get_num_rows(); ++i) {
@@ -40,6 +32,13 @@ TridiagonalMatrix::TridiagonalMatrix(std::vector<double> a, std::vector<double> 
         : Matrix(a.size()), a(a), b(b), c(c) {};
 // Assuming a, b, c have same size
 
+// It returns the value of the element in row = input_row_idx and column = input_col_idx
+double TridiagonalMatrix::operator()(unsigned int input_row_idx, unsigned int input_col_idx) const {
+    if(input_row_idx >= this->get_num_rows() || input_col_idx >= this->get_num_columns() || input_row_idx < 0 || input_col_idx < 0) {
+        throw std::out_of_range ("Indexes out of range");
+    }
+    return data[input_row_idx * dimension + input_col_idx];
+};
 
 std::vector<double> TridiagonalMatrix::solve(std::vector<double> &f) {
     // Check size compatibility via exception handling

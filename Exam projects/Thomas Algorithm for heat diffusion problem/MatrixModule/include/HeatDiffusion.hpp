@@ -11,7 +11,7 @@ namespace moduleH {
 class HeatDiffusion {
 public:
     // Constructor
-    HeatDiffusion(int dimension, double initialTemperature, const double boundaryCondition1, const double boundaryCondition2);
+    HeatDiffusion(int dimension, double L, const double boundaryCondition1, const double boundaryCondition2);
     // Function to evaluate in point y
     mup::Value evaluate(double y, mup::ParserX& parser);
     // Solve the heat diffusion problem using the Thomas Algorithm
@@ -25,7 +25,7 @@ int dimension;
 std::vector<double> a; // subdiagonal
 std::vector<double> b; // diagonal
 std::vector<double> c; // superdiagonal
-double initialTemperature; // Initial temperature
+double L; // Upper boundary of domain
 const double boundaryCondition1; // Boundary condition for u(0)
 const double boundaryCondition2; // Boundary condition for u(L)
 std::vector<double> forcingTerm; // Forcing term i.e. f(x)

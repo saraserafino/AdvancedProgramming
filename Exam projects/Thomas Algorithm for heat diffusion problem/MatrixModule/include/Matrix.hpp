@@ -12,11 +12,11 @@ public:
     // Constructor
     Matrix(int dimension);
 
-    double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const;
+    virtual double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const = 0;
     void print_matrix(const Matrix& mat) const;
 
     // Method that solves a linear system given a right hand side f and returns its solution
-    virtual std::vector<double> solve(std::vector<double> &f);
+    virtual std::vector<double> solve(std::vector<double> &f) = 0;
     
     unsigned int get_num_rows() const;
     unsigned int get_num_columns() const;
@@ -33,6 +33,8 @@ std::vector<double> data;
 class TridiagonalMatrix : public Matrix {
 public:
     TridiagonalMatrix(std::vector<double> a, std::vector<double> b, std::vector<double> c);
+
+    virtual double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const override;
 
     // Override it to implement the Thomas algorithm
     std::vector<double> solve(std::vector<double> &f) override;

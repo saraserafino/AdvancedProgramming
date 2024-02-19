@@ -16,6 +16,16 @@ public:
     using Matrix::Matrix;
 
     // Trampoline (one for each virtual function).
+    virtual double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const override {
+        PYBIND11_OVERRIDE_PURE(
+            double, /* Return type. */
+            Matrix,      /* Parent class. */
+            operator(),        /* Name of function in C++ (must match Python name). */
+            input_row_idx,      /* Argument(s). */
+            input_col_idx
+        );
+    }
+
     virtual std::vector<double> solve(std::vector<double> &f) override {
         PYBIND11_OVERRIDE_PURE(
             std::vector<double>, /* Return type. */
@@ -37,18 +47,18 @@ PYBIND11_MODULE(moduleH, m) {
     py::class_<Matrix, PyMatrix>(m, "Matrix")
         .def(py::init<int>(),
             py::arg("dimension"))
-        .def("operator()", &Matrix::operator(), py::arg("input_row_idx"), py::arg("input_col_idx"))
         .def("print_matrix", &Matrix::print_matrix, py::arg("mat"))
         .def("get_num_rows", &Matrix::get_num_rows)
         .def("get_num_columns", &Matrix::get_num_columns);
 
     py::class_<TridiagonalMatrix, Matrix>(m, "TridiagonalMatrix")
         .def(py::init<std::vector<double>, std::vector<double>, std::vector<double>>(),
-            py::arg("a"), py::arg("b"), py::arg("c"));
+            py::arg("a"), py::arg("b"), py::arg("c"))
+        .def("operator()", &Matrix::operator(), py::arg("input_row_idx"), py::arg("input_col_idx"));
         
     py::class_<HeatDiffusion>(m, "HeatDiffusion")
         .def(py::init<int, double, const double, const double>(),
-            py::arg("dimension"), py::arg("initialTemperature"),
+            py::arg("dimension"), py::arg("L"),
             py::arg("boundaryCondition1"), py::arg("boundaryCondition2"))
         .def("evaluate", &HeatDiffusion::evaluate, py::arg("y"), py::arg("parser"))
         .def("solveH", &HeatDiffusion::solveH, py::arg("function"))

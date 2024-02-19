@@ -17,8 +17,8 @@ class TridiagonalMatrix(Matrix):
         self.c = c
 
 class HeatDiffusion:
-    def __init__(self, dimension, initialTemperature, boundaryCondition1, boundaryCondition2):
+    def __init__(self, dimension, L, boundaryCondition1, boundaryCondition2):
         self.dimension = dimension
-        self.initialTemperature = initialTemperature
+        self.L = L
         self.boundaryCondition1 = boundaryCondition1
         self.boundaryCondition2 = boundaryCondition2

@@ -5,8 +5,8 @@
 
 namespace moduleH {
 
-HeatDiffusion::HeatDiffusion(int dimension, double initialTemperature, const double boundaryCondition1, const double boundaryCondition2)
-    : dimension(dimension), initialTemperature(initialTemperature),
+HeatDiffusion::HeatDiffusion(int dimension, double L, const double boundaryCondition1, const double boundaryCondition2)
+    : dimension(dimension), L(L),
     boundaryCondition1(boundaryCondition1), boundaryCondition2(boundaryCondition2) {};
 
 // Define the function to evaluate in point y
@@ -25,20 +25,20 @@ std::vector<double> HeatDiffusion::solveH(const std::string &function) {
     // Fill the vector domain (i.e. x) with the equally spaced temperatures
     std::vector<double> domain(dimension); // prima c'era dimension+1
     // Calculate number of spatial steps
-    double h = initialTemperature / (dimension + 1);
+    double h = L / (dimension + 1);
     for (unsigned int i = 0; i < dimension; ++i) {// prima c'era dimension+1
         domain[i] = i * h;
     }
 
     // subdiagonal
-    a.resize(dimension - 1, 1); // before I put dimension instead of dimension-1
+    a.resize(dimension, 1);
     a[dimension - 1] = 0;
     // diagonal
     b.resize(dimension, -2);
     b[0] = 1;
     b[dimension - 1] = 1;
     // superdiagonal
-    c.resize(dimension - 1, 1); // before I put dimension instead of dimension-1
+    c.resize(dimension, 1);
     c[0] = 0;
     //c[dimension - 1] = 0;
 
@@ -76,7 +76,7 @@ double HeatDiffusion::validate_solution(const std::vector<double> solution, cons
     parser.SetExpr(exactf);
 
     // Calculate number of spatial steps for the domain (i.e. x)
-    double h = initialTemperature / (dimension + 1);
+    double h = L / (dimension + 1);
     std::vector<double> exactSol(dimension);
     for (unsigned int i = 0; i < dimension; ++i) {
         // Evaluate the exact solution in each point of the domain (which is i*h equally spaced)
