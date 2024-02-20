@@ -33,7 +33,7 @@ class CMakeBuild(build_ext):
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}".format(extdir),
             "-DPYTHON_EXECUTABLE={}".format(sys.executable),
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
-            #"-Deigen3_DIR=/opt/eigen3/share/cmake/eigen3"
+            "-Deigen3_DIR=/opt/eigen3/share/cmake/eigen3"
             #"-DBOOST_ROOT=/opt/boost",
             "-Dmuparserx_DIR=/opt/muparserx/share/cmake/muparserx"
         ]

@@ -10,6 +10,10 @@ add_compile_options(-std=c++17)
 find_package(muparserx 4.0 REQUIRED)
 include_directories(${muparserx_INCLUDE_DIRS})
 
+# Search for Eigen
+find_package(Eigen3 REQUIRED)
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
+
 # Search for Pybind
 find_package(pybind11 REQUIRED)
 include_directories(SYSTEM ${pybind11_INCLUDE_DIRS})
@@ -17,7 +21,9 @@ include_directories(SYSTEM ${pybind11_INCLUDE_DIRS})
 # Add the Python modules
 pybind11_add_module(moduleH
     MatrixModule/src/Matrix.cpp
+    MatrixModule/include/ThomasSolver.tpl.hpp
     MatrixModule/src/HeatDiffusion.cpp
+    MatrixModule/include/HeatDiffusion.tpl.hpp
     MatrixModule/src/Matrix_py.cpp
     )
 

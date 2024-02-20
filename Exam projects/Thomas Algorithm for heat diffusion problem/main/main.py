@@ -17,10 +17,15 @@ def execution_time(func):
         return result, executionTime
     return wrapper
 
-# Solve the heat diffusion problem usign the implementation in C++
+# Solve the heat diffusion problem usign the implementation of the Tridiagonal Matrix in C++
 @execution_time
-def solveH_cpp(HDproblem, f):
-    return HDproblem.solveH(f)
+def solveTridiagonal_cpp(HDproblem, f):
+    return HDproblem.solveHeatProblemTridiagonal(f)
+
+# Solve the heat diffusion problem usign the implementation of the Eigen Matrix in C++
+@execution_time
+def solveEigen_cpp(HDproblem, f):
+    return HDproblem.solveHeatProblemEigen(f)
 
 # Solve the heat diffusion problem using NumPy
 @execution_time
@@ -70,16 +75,21 @@ L = 1
 boundaryCondition = 0 # both alpha and beta are 0
 
 # Create instance of the heat diffusion problem
-HDproblem = moduleH.HeatDiffusion(dimension + 2, L, boundaryCondition, boundaryCondition)
+HDproblem = moduleH.HeatDiffusion(dimension, L, boundaryCondition, boundaryCondition)
 
 # Define the heat source term and the exact analytical solution (muParseX is used in the C++ code)
 f_cpp = "-sin(pi*x)"
 exactf_cpp = "(sin(pi*x))/(pi*pi)"
 
-# Compute solution with C++
-solution_cpp, timesol_cpp = solveH_cpp(HDproblem, f_cpp)
+# Compute solution with the Tridiagonal Matrix in C++
+solutionTridiag_cpp, timesolTridiag_cpp = solveTridiagonal_cpp(HDproblem, f_cpp)
 # Validate it against the exact solution
-error_cpp = HDproblem.validate_solution(solution_cpp, exactf_cpp)
+errorTridiag_cpp = HDproblem.validate_solution(solutionTridiag_cpp, exactf_cpp)
+
+# Compute solution with the Eigen Matrix in C++
+solutionEigen_cpp, timesolEigen_cpp = solveEigen_cpp(HDproblem, f_cpp)
+# Validate it against the exact solution
+errorEigen_cpp = HDproblem.validate_solution(solutionEigen_cpp, exactf_cpp)
 #print(f"Solution computed with C++: {solution_cpp}, error: {error_cpp}.")
 
 
@@ -109,16 +119,16 @@ error_py = validate_solution_py(solution_py, exact_solution)
 #print(f"Solution computed with Python: {solution_py}, error: {error_py}.")
 
 # Prepare the results to be printed in a more uniform way with tabulate
-header = ["", "Exact", "C++", "Python"]
+header = ["", "Exact", "Tridiagonal C++", "Eigen C++", "Python"]
 data = [
-        ["Solution[0]", exact_solution[0], solution_cpp[0], solution_py[0]],
-        ["Solution[1]", exact_solution[1], solution_cpp[1], solution_py[1]],
-        ["Solution[2]", exact_solution[2], solution_cpp[2], solution_py[2]],
-        ["Solution[3]", exact_solution[3], solution_cpp[3], solution_py[3]],
-        ["Solution[4]", exact_solution[4], solution_cpp[4], solution_py[4]],
-        ["Solution[n]", round(exact_solution[-1], 3), solution_cpp[-1], solution_py[-1]],
-        ["Error against exact solution", None, round(error_cpp, 5), round(error_py, 5)],
-        ["Execution time (s)", None, round(timesol_cpp, 5), round(timesol_py, 5)]
+        ["Solution[0]", exact_solution[0], solutionTridiag_cpp[0], solutionEigen_cpp[0], solution_py[0]],
+        ["Solution[1]", exact_solution[1], solutionTridiag_cpp[1], solutionEigen_cpp[1], solution_py[1]],
+        ["Solution[2]", exact_solution[2], solutionTridiag_cpp[2], solutionEigen_cpp[2], solution_py[2]],
+        ["Solution[3]", exact_solution[3], solutionTridiag_cpp[3], solutionEigen_cpp[3], solution_py[3]],
+        ["Solution[4]", exact_solution[4], solutionTridiag_cpp[4], solutionEigen_cpp[4], solution_py[4]],
+        ["Solution[n]", round(exact_solution[-1], 3), solutionTridiag_cpp[-1], solutionEigen_cpp[-1], solution_py[-1]],
+        ["Error against exact solution", None, round(errorTridiag_cpp, 5), round(errorEigen_cpp, 5), round(error_py, 5)],
+        ["Execution time (s)", None, round(timesolTridiag_cpp, 5), round(timesolEigen_cpp, 5), round(timesol_py, 5)]
         ]
 print(f"Solution of the heat diffusion problem with heat source term {f_cpp} and exact solution {exactf_cpp}:")
 print(tabulate(data, header, tablefmt = "fancy_grid"))
@@ -132,8 +142,11 @@ x_values = [i * h for i in range(dimension + 2)]
 # Plot exact solution
 plt.plot(x_values, exact_solution, label = 'Exact Solution', color = 'blue')
 
-# Plot solution computed with C++
-plt.plot(x_values, solution_cpp, label = 'C++ Solution', linestyle = '--', marker = 'o', color = 'red')
+# Plot solution computed with the Tridiagonal matrix in C++
+plt.plot(x_values, solutionTridiag_cpp, label = 'Tridiagonal C++ Solution', linestyle = '--', marker = 'o', color = 'red')
+
+# Plot solution computed with the Eigen matrix in C++
+plt.plot(x_values, solutionEigen_cpp, label = 'Eigen C++ Solution', linestyle = '--', marker = 'o', color = 'cyan')
 
 # Plot solution computed with Python
 plt.plot(x_values, solution_py, label = 'Python Solution', linestyle = ':', marker = 's', color = 'green')
@@ -146,3 +159,19 @@ plt.grid(True)
 # Save the plot
 plt.savefig('images/NumericalVSExactSolution.png')
 plt.show()
+
+moduleH.get_aTridiagonal()
+# mi dice che non lo ha, forse perché dovrei chiamare la matrice, ma la matrice è dentro a HDproblem
+
+a = [0, 3, 0]
+b = [5, 4, 2]
+c = [1, -2, 0]
+f = [5, 2, -2]
+trid = moduleH.TridiagonalMatrix(a,b,c)
+print(trid.readTridiagonalEntry(1,0))
+# devi effettivamente assegnare nella matrice
+
+soltri = trid.solveTridiagonalSystem(f)
+trid.printTridiagonalMatrix()
+print(f"The solution is {soltri}")
+# meh risultato

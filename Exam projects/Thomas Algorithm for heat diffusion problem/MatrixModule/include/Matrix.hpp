@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <Eigen/Sparse>
 
 namespace moduleH {
 
@@ -13,13 +14,19 @@ public:
     Matrix(int dimension);
 
     virtual double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const = 0;
-    void print_matrix(const Matrix& mat) const;
+    virtual void printMatrix() const = 0;
 
     // Method that solves a linear system given a right hand side f and returns its solution
     virtual std::vector<double> solve(std::vector<double> &f) = 0;
     
-    unsigned int get_num_rows() const;
-    unsigned int get_num_columns() const;
+    // Methods for getting the diagonals for each matrix
+    virtual std::vector<double> get_a() const = 0;
+    virtual std::vector<double> get_b() const = 0;
+    virtual std::vector<double> get_c() const = 0;
+
+    // Methods for getting the dimension of the matrix
+    unsigned int get_dimension() const;
+
     virtual ~Matrix() {}; // Virtual destructor
 
 protected:
@@ -27,16 +34,19 @@ int dimension;
 std::vector<double> data;
 };
 
-
-// Derived class from Matrix
+// Derived classes from Matrix
 
 class TridiagonalMatrix : public Matrix {
 public:
     TridiagonalMatrix(std::vector<double> a, std::vector<double> b, std::vector<double> c);
 
-    virtual double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const override;
+    double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const override;
+    void printMatrix() const override;
+    std::vector<double> get_a() const override;
+    std::vector<double> get_b() const override;
+    std::vector<double> get_c() const override;
 
-    // Override it to implement the Thomas algorithm
+    // Override it to use the Thomas algorithm
     std::vector<double> solve(std::vector<double> &f) override;
 
     ~TridiagonalMatrix() {}; // Default destructor
@@ -47,5 +57,27 @@ std::vector<double> b; // diagonal
 std::vector<double> c; // superdiagonal
 };
 
+// Derived class using Eigen's SparseMatrixXd
+class EigenMatrix : public Matrix {
+public:
+    EigenMatrix(std::vector<double> a, std::vector<double> b, std::vector<double> c);
+
+    double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const override;
+    void printMatrix() const override;
+    std::vector<double> get_a() const override;
+    std::vector<double> get_b() const override;
+    std::vector<double> get_c() const override;
+
+    // Override it to use the Thomas algorithm
+    std::vector<double> solve(std::vector<double> &f) override;
+    
+    ~EigenMatrix() {}; // Default destructor
+
+protected:
+Eigen::SparseMatrix<double> sparseMatrix;
+std::vector<double> a; // subdiagonal
+std::vector<double> b; // diagonal
+std::vector<double> c; // superdiagonal
+};
 } // end of namespace
 #endif // MATRIX_HPP_
