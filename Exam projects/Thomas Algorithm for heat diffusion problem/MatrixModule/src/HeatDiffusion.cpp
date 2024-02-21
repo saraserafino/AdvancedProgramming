@@ -45,7 +45,7 @@ std::vector<double> HeatDiffusion::computeHeatSource(const std::string &function
     // Fill the vector domain (i.e. x) with the equally spaced temperatures
     std::vector<double> domain(dimension);
     // Calculate number of spatial steps
-    double h = L / (dimension + 1);
+    double h = L / (dimension - 1);
     for (unsigned int i = 0; i < dimension; ++i) {
         domain[i] = i * h;
     }

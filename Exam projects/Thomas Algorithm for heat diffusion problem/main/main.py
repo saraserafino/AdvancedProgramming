@@ -209,64 +209,12 @@ plt.plot(x_values, solution_scipy, label = 'SciPy Solution', linestyle = '--', m
 
 plt.xlabel('x')
 plt.ylabel('Temperature')
-plt.title('Numerical Solutions VS Exact Solution (dimension=10)')
+plt.title('Numerical Solutions VS Exact Solution')
 plt.legend()
 plt.grid(True)
 # Save the plot
-plt.savefig('images/NumericalVSExactSolution_dim10.png')
+plt.savefig('images/NumericalVSExactSolution.png')
 plt.show()
-
-# -----------------------------------------------------
-# main for Heat Diffusion problem with higher dimension
-# -----------------------------------------------------
-
-print("Setting an higher dimension of the problem, the C++ methods's performances increase:")
-# Redefine what needed exactly as done before
-dimension = 50
-HDproblem3 = moduleH.HeatDiffusion(dimension, L, boundaryCondition, boundaryCondition)
-solutionTridiag_cpp, timesolTridiag_cpp = solveHeatTridiagonal_cpp(HDproblem3, f_cpp)
-errorTridiag_cpp = HDproblem3.validate_solution(solutionTridiag_cpp, exactf_cpp)
-HDproblem4 = moduleH.HeatDiffusion(dimension, L, boundaryCondition, boundaryCondition)
-solutionEigen_cpp, timesolEigen_cpp = solveHeatEigen_cpp(HDproblem4, f_cpp)
-errorEigen_cpp = HDproblem4.validate_solution(solutionEigen_cpp, exactf_cpp)
-solution_numpy, timesol_numpy = solveHeat_numpy(dimension, L, boundaryCondition, boundaryCondition, f_py)
-solution_scipy, timesol_scipy = solveHeat_scipy(dimension, L, boundaryCondition, boundaryCondition, f_py)
-h = L / (dimension + 1)
-exact_solution = [exactf_py(i * h) for i in range(dimension + 2)]
-error_numpy = validate_solution_py(solution_numpy, exact_solution)
-error_scipy = validate_solution_py(solution_scipy, exact_solution)
-
-# Prepare the results to be printed in a more uniform way with tabulate
-header = ["", "Exact", "Tridiagonal", "Eigen", "NumPy", "SciPy"]
-data = [
-        ["Solution[0]", exact_solution[0], solutionTridiag_cpp[0], solutionEigen_cpp[0], solution_numpy[0], solution_scipy[0]],
-        ["Solution[1]", exact_solution[1], solutionTridiag_cpp[1], solutionEigen_cpp[1], solution_numpy[1], solution_scipy[1]],
-        ["Solution[2]", exact_solution[2], solutionTridiag_cpp[2], solutionEigen_cpp[2], solution_numpy[2], solution_scipy[2]],
-        ["Solution[3]", exact_solution[3], solutionTridiag_cpp[3], solutionEigen_cpp[3], solution_numpy[3], solution_scipy[3]],
-        ["Solution[4]", exact_solution[4], solutionTridiag_cpp[4], solutionEigen_cpp[4], solution_numpy[4], solution_scipy[4]],
-        ["Solution[n]", round(exact_solution[-1], 3), solutionTridiag_cpp[-1], solutionEigen_cpp[-1], solution_numpy[-1], solution_scipy[-1]],
-        ["Error against exact solution", None, round(errorTridiag_cpp, 5), round(errorEigen_cpp, 5), round(error_numpy, 5), round(error_scipy, 5)],
-        ["Execution time (s)", None, round(timesolTridiag_cpp, 5), round(timesolEigen_cpp, 5), round(timesol_numpy, 5), round(timesol_scipy, 5)]
-        ]
-print(tabulate(data, header, tablefmt = "fancy_grid"))
-
-
-# Plot exactly as done before
-x_values = [i * h for i in range(dimension + 2)]
-plt.plot(x_values, exact_solution, label = 'Exact Solution', color = 'blue')
-plt.plot(x_values, solutionTridiag_cpp, label = 'Tridiagonal Solution', linestyle = '--', color = 'red')
-plt.plot(x_values, solutionEigen_cpp, label = 'Eigen Solution', linestyle = ':', color = 'cyan')
-plt.plot(x_values, solution_numpy, label = 'NumPy Solution', linestyle = ':', color = 'green')
-plt.plot(x_values, solution_scipy, label = 'SciPy Solution', linestyle = '--', color = 'orange')
-plt.xlabel('x')
-plt.ylabel('Temperature')
-plt.title('Numerical Solutions VS Exact Solution (dimension=50)')
-plt.legend()
-plt.grid(True)
-# Save the plot
-plt.savefig('images/NumericalVSExactSolution_dim50.png')
-plt.show()
-
 
 print("Thomas Algorithm not only solves the heat diffusion problem, but systems of equations with a tridiagonal matrix")
 

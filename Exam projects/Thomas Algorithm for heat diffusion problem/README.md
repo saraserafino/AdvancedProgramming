@@ -29,15 +29,9 @@ The diagonals of this matrix are the diagonal vectors a, b, c defined in each Ma
 
 ## Validation of solutions and considerations
 In the first part of the main, the above heat diffusion problem is solved using four methods: the TridiagonalMatrix and EigenMatrix implemented in C++ and the already existing functions `solve` from `numpy.linalg` and `solve_banded` from `scipy.linalg`. Every method is decorated with a time wrapper so to confront their execution times. Every solution is validated against the exact solution computing the error $\left\|u - u_\mathrm{ex}\right\|$ in Euclidean norm.<br>
-The results obtained with NumPy and SciPy are exactly the same (rounded by 5 digits after the decimal point to a better visualization), except for the time execution which however it is so small that it is imperceptible to the human eye.<br>
-A plot comparing the numerical and exact solutions VS x is shown
+As it can be seen from this plot that compares the numerical and exact solutions VS x, all the results perfectly coincide.
 <p align="center">
-  <img src="images/NumericalVSExactSolution_dim10.png" /><br>
- Numerical Solutions VS Exact Solution
-</p>
-And it can be seen as setting an higher dimension implies a higher exactness of the C++ methods.
-<p align="center">
-  <img src="images/NumericalVSExactSolution_dim50.png" /><br>
+  <img src="images/NumericalVSExactSolution.png" /><br>
  Numerical Solutions VS Exact Solution
 </p>
 A helpful note in case one wishes to reproduce the results, is defining a HeatDiffusion object each time in the main. In fact I had not done it and I was wondering why the Eigen plot and solution were exactly specular to the Tridiagonal ones: solving the heat problem somehow modifies the HeatDiffusion instance thus, having first defined the Tridiagonal one, when later using the Eigen, it starts from opposite values.<br>
