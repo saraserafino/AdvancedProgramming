@@ -7,12 +7,14 @@ A module called moduleH is created using the header, template and source files i
 
 ## Implementation of Matrix
 This class implements an abstract class Matrix and its derived classes TridiagonalMatrix and EigenMatrix. The abstract class defines common matrix attributes and pure virtual methods, such as getting the dimension, accessing elements, printing the matrix, getting each diagonal.<br>
-The access of elements is done overloading the operator() that in PyBind will be called readMatrixEntry. While for the TridiagonalMatrix it is overloaded as one would expect, for EigenMatrix it uses an already existing method of Eigen called `.coeff()` that gets applied to the constructed SparseMatrixXd. SparseMatrixXd is implemented in the constructor, using the method `.insert(row,column)` of Eigen to inserting the diagonal values in the matrix. Having used a SparseMatrix, it would have made sense to actually compress it, but it was not considered fundamental to the development of the project. In fact it could have been used to print it in a compressed way, but as most people are more used to seeing a matrix in a dense way, it was not done.<br>
+The access of elements is done overloading the `operator()` that in PyBind will be called readMatrixEntry. While for the TridiagonalMatrix it is overloaded as one would expect, for EigenMatrix it uses an already existing method of Eigen called `.coeff()` that gets applied to the constructed SparseMatrixXd. SparseMatrixXd is implemented in the constructor, using the method `.insert(row,column)` of Eigen to inserting the diagonal values in the matrix.<br>
+Having used a SparseMatrix, it would have made sense to actually compress it, but it was not considered fundamental to the development of the project. In fact it could have been used to print it in a compressed way, but as most people are more used to seeing a matrix in a dense way, it was not done.<br>
 Both methods for printing the matrix use the overloaded operator() to access elements instead of cycling through rows and columns, being less time and energy consuming.<br>
 Both solve methods call the Thomas algorithm to solve it, without any explicit call to HeatDiffusion; the reason for this choice will be explained in the next section.
 
 ## Implementation of ThomasSolver
-ThomasSolver is a class templated over the matrix type - thus it is defined in a template file with extention .tpl.hpp - to allow to work with any matrix type; here TridiagonalMatrix and Eigen's SparseMatrixXd. It implements the Thomas algorithm which is an algorithm to solve tridiagonal systems of equations. The implementation does not assume anything specific about the matrix type, it just needs its diagonal vectors.<br>
+ThomasSolver is a class templated over the matrix type - thus it is defined in a template file with extension .tpl.hpp - to allow to work with any matrix type; here TridiagonalMatrix and Eigen's SparseMatrixXd.<br>
+It implements the Thomas algorithm which is an algorithm to solve tridiagonal systems of equations. The implementation does not assume anything specific about the matrix type, it just needs its diagonal vectors.<br>
 For this reason it can not only be used to solve the heat diffusion problem as required by the instructions of the project, but it can solve any tridiagonal system of equations. A proof of it is given in the second part of the main, solving a system given a matrix 5x5 and a right-hand vector.
 
 ## Implementation of HeatDiffusion
@@ -22,19 +24,7 @@ For testing them in the main, both the heat source term $f(x) = \sin(\pi x)$ and
 $$
 u_\mathrm{ex}(x) = \frac{\sin(\pi x)}{\pi^2}.
 $$
-are provided, together with the domain $[0,L] = [0,1]$, the boundary conditions $\alpha = \beta = 0$ and the heat matrix
-$$
-A = \begin{bmatrix}
-1 & 0 & 0 & \cdots & \cdots & \cdots & \cdots & 0\\
--1 & 2 & -1 & 0 & & & & \vdots\\
-0 & -1 & 2 & -1 & \ddots & & & \vdots\\
-\vdots & 0 & \ddots & \ddots & \ddots & \ddots & & \vdots\\
-\vdots & & \ddots & \ddots & \ddots & \ddots & 0 & \vdots\\
-\vdots & & & \ddots & -1 & 2 & -1 & 0\\
-\vdots & & & & 0 & -1 & 2 & -1\\
-0 & \cdots & \cdots  & \cdots & \cdots & 0 & 0 & 1\\
-\end{bmatrix}
-$$
+are provided, together with the domain $[0,L] = [0,1]$, the boundary conditions $\alpha = \beta = 0$ and the heat tridiagonal matrix.
 The diagonals of this matrix are the diagonal vectors a, b, c defined in each Matrix constructor. For computing them and the heat source term, the methods `setHeatMatrix` and `computeHeatSource` are called in the main when solving the heat diffusion problem.
 
 ## Validation of solutions and considerations
