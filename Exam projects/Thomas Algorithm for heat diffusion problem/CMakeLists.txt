@@ -23,7 +23,6 @@ pybind11_add_module(moduleH
     MatrixModule/src/Matrix.cpp
     MatrixModule/include/ThomasSolver.tpl.hpp
     MatrixModule/src/HeatDiffusion.cpp
-    MatrixModule/include/HeatDiffusion.tpl.hpp
     MatrixModule/src/Matrix_py.cpp
     )
 

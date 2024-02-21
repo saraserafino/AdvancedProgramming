@@ -89,8 +89,8 @@ PYBIND11_MODULE(moduleH, m) {
     py::class_<TridiagonalMatrix, Matrix>(m, "TridiagonalMatrix")
         .def(py::init<std::vector<double>, std::vector<double>, std::vector<double>>(),
             py::arg("a"), py::arg("b"), py::arg("c"))
-        .def("solveTridiagonalSystem", &TridiagonalMatrix::solve, py::arg("f"))
-        .def("readTridiagonalEntry", &TridiagonalMatrix::operator(), py::arg("input_row_idx"), py::arg("input_col_idx"))
+        .def("solveTridiagonal", &TridiagonalMatrix::solve, py::arg("f"))
+        .def("readTridiagonalEntry", &TridiagonalMatrix::operator(), py::arg("row"), py::arg("col"))
         .def("printTridiagonalMatrix", &TridiagonalMatrix::printMatrix)
         .def("get_aTridiagonal", &TridiagonalMatrix::get_a)
         .def("get_bTridiagonal", &TridiagonalMatrix::get_b)
@@ -100,8 +100,8 @@ PYBIND11_MODULE(moduleH, m) {
     py::class_<EigenMatrix, Matrix>(m, "EigenMatrix")
         .def(py::init<std::vector<double>, std::vector<double>, std::vector<double>>(),
             py::arg("a"), py::arg("b"), py::arg("c"))
-        .def("solveEigenSystem", &EigenMatrix::solve, py::arg("f"))
-        .def("readEigenEntry", &EigenMatrix::operator(), py::arg("input_row_idx"), py::arg("input_col_idx"))
+        .def("solveEigen", &EigenMatrix::solve, py::arg("f"))
+        .def("readEigenEntry", &EigenMatrix::operator(), py::arg("row"), py::arg("col"))
         .def("printEigenMatrix", &EigenMatrix::printMatrix)
         .def("get_aEigen", &EigenMatrix::get_a)
         .def("get_bEigen", &EigenMatrix::get_b)
@@ -112,8 +112,8 @@ PYBIND11_MODULE(moduleH, m) {
             py::arg("dimension"), py::arg("L"),
             py::arg("boundaryCondition1"), py::arg("boundaryCondition2"))
         .def("evaluate", &HeatDiffusion::evaluate, py::arg("y"), py::arg("parser"))
-        .def("solveHeatProblemTridiagonal", &HeatDiffusion::solveHeatProblem<TridiagonalMatrix>, py::arg("function"))
-        .def("solveHeatProblemEigen", &HeatDiffusion::solveHeatProblem<EigenMatrix>, py::arg("function"))
+        .def("setHeatMatrix", &HeatDiffusion::setHeatMatrix)
+        .def("computeHeatSource", &HeatDiffusion::computeHeatSource, py::arg("function"))
         .def("validate_solution", &HeatDiffusion::validate_solution, py::arg("solution"), py::arg("exactSol"));
 
     py::class_<ThomasSolver<TridiagonalMatrix>>(m, "ThomasSolverTridiagonal")

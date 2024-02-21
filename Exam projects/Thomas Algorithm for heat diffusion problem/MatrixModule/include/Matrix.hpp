@@ -13,25 +13,26 @@ public:
     // Constructor
     Matrix(int dimension);
 
-    virtual double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const = 0;
-    virtual void printMatrix() const = 0;
+    // Method that returns the value of (row,col)
+    virtual double operator()(unsigned int row, unsigned int col) const = 0;
 
-    // Method that solves a linear system given a right hand side f and returns its solution
-    virtual std::vector<double> solve(std::vector<double> &f) = 0;
+    virtual void printMatrix() const = 0;
     
     // Methods for getting the diagonals for each matrix
     virtual std::vector<double> get_a() const = 0;
     virtual std::vector<double> get_b() const = 0;
     virtual std::vector<double> get_c() const = 0;
 
-    // Methods for getting the dimension of the matrix
+    // Method for getting the dimension of the matrix
     unsigned int get_dimension() const;
+
+    // Method that solves a linear system given a right hand side f and returns its solution
+    virtual std::vector<double> solve(std::vector<double> &f) = 0;
 
     virtual ~Matrix() {}; // Virtual destructor
 
 protected:
 int dimension;
-std::vector<double> data;
 };
 
 // Derived classes from Matrix
@@ -40,7 +41,7 @@ class TridiagonalMatrix : public Matrix {
 public:
     TridiagonalMatrix(std::vector<double> a, std::vector<double> b, std::vector<double> c);
 
-    double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const override;
+    double operator()(unsigned int row, unsigned int col) const override;
     void printMatrix() const override;
     std::vector<double> get_a() const override;
     std::vector<double> get_b() const override;
@@ -62,7 +63,7 @@ class EigenMatrix : public Matrix {
 public:
     EigenMatrix(std::vector<double> a, std::vector<double> b, std::vector<double> c);
 
-    double operator()(unsigned int input_row_idx, unsigned int input_col_idx) const override;
+    double operator()(unsigned int row, unsigned int col) const override;
     void printMatrix() const override;
     std::vector<double> get_a() const override;
     std::vector<double> get_b() const override;

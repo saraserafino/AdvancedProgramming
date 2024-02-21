@@ -13,16 +13,12 @@ public:
     // Constructor
     HeatDiffusion(int dimension, double L, const double boundaryCondition1, const double boundaryCondition2);
 
-    // Declare ThomasSolver as a friend so that it can access necessary operations
-    //template<typename MatrixType>
-    //friend class ThomasSolver;
-
     // Function to evaluate in point y
     mup::Value evaluate(double y, mup::ParserX& parser);
 
-    // Solve the heat diffusion problem using the Thomas Algorithm
-    template<typename MatrixType>
-    std::vector<double> solveHeatProblem(const std::string &function);
+    // Set the diagonal values of the heat matrix and the heat source term (i.e. f)
+    std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> setHeatMatrix();
+    std::vector<double> computeHeatSource(const std::string &function);
 
     // Validate the solution against the exact solution
     double validate_solution(const std::vector<double> solution, const std::string &exactSol);
@@ -37,8 +33,7 @@ std::vector<double> c; // superdiagonal
 double L; // Upper boundary of domain
 const double boundaryCondition1; // Boundary condition for u(0)
 const double boundaryCondition2; // Boundary condition for u(L)
-std::vector<double> forcingTerm; // Forcing term i.e. f(x)
+std::vector<double> HeatSource; // Heat source term i.e. f(x)
 };
 } // end of namespace
-#include "HeatDiffusion.tpl.hpp"
 #endif // HEAT_DIFFUSION_HPP_

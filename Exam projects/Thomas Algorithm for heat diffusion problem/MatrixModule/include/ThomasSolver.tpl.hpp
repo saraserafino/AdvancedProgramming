@@ -16,6 +16,7 @@ std::vector<double> ThomasSolver<MatrixType>::ThomasAlgorithm(std::vector<double
     std::vector<double> a = matrix.get_a();
     std::vector<double> b = matrix.get_b();
     std::vector<double> c = matrix.get_c();
+
     // Check size compatibility via exception handling
     if (f.size() != dimension) {
         throw std::invalid_argument("Right-hand side vector size f does not match matrix dimensions.");
@@ -31,7 +32,7 @@ std::vector<double> ThomasSolver<MatrixType>::ThomasAlgorithm(std::vector<double
     // Step 2
     u[dimension - 1] = f[dimension - 1] / b[dimension - 1];
     unsigned int i = dimension - 1;
-    while (i > 1) {
+    while (i >= 1) {
         u[i - 1] = ( f[i - 1] - c[i - 1] * u[i] ) / b[i - 1];
         i -= 1;
     }
