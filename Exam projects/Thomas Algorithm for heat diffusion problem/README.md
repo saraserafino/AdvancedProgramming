@@ -21,10 +21,38 @@ For this reason it can not only be used to solve the heat diffusion problem as r
 This class represents the heat diffusion problem and exposes its relevant parameters (domain, boundary conditions, forcing term f).
 With these parameters, the right-hand side vector $f$ is computed starting from a function of x. In fact muParserX is used to parse the functions and the exact results from input strings. The exact result is used when validating the computed solution against the exact solution.<br>
 For testing them in the main, both the heat source term $f(x) = \sin(\pi x)$ and the exact analytical solution
-$$
+$
 u_\mathrm{ex}(x) = \frac{\sin(\pi x)}{\pi^2}.
-$$
-are provided, together with the domain $[0,L] = [0,1]$, the boundary conditions $\alpha = \beta = 0$ and the heat tridiagonal matrix.
+$
+are provided, together with the domain $[0,L] = [0,1]$, the boundary conditions $\alpha = \beta = 0$ and the heat tridiagonal matrix
+$
+A = \begin{bmatrix}
+1 & 0 & 0 & \cdots & \cdots & \cdots & \cdots & 0\\
+-1 & 2 & -1 & 0 & & & & \vdots\\
+0 & -1 & 2 & -1 & \ddots & & & \vdots\\
+\vdots & 0 & \ddots & \ddots & \ddots & \ddots & & \vdots\\
+\vdots & & \ddots & \ddots & \ddots & \ddots & 0 & \vdots\\
+\vdots & & & \ddots & -1 & 2 & -1 & 0\\
+\vdots & & & & 0 & -1 & 2 & -1\\
+0 & \cdots & \cdots  & \cdots & \cdots & 0 & 0 & 1\\
+\end{bmatrix},
+\quad
+\mathbf{u} = \begin{bmatrix}
+u_0 \\
+u_1 \\
+\vdots \\
+u_{N+1}
+\end{bmatrix},
+\quad
+\mathbf{f} = \begin{bmatrix}
+\alpha \\
+f(x_1) h^2 \\
+f(x_2) h^2 \\
+\vdots \\
+f(x_N) h^2 \\
+\beta
+\end{bmatrix}.
+$
 The diagonals of this matrix are the diagonal vectors a, b, c defined in each Matrix constructor. For computing them and the heat source term, the methods `setHeatMatrix` and `computeHeatSource` are called in the main when solving the heat diffusion problem.
 
 ## Validation of solutions and considerations
