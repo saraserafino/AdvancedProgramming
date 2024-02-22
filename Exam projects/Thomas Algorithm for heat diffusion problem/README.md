@@ -21,11 +21,11 @@ For this reason it can not only be used to solve the heat diffusion problem as r
 This class represents the heat diffusion problem and exposes its relevant parameters (domain, boundary conditions, forcing term f).
 With these parameters, the right-hand side vector $f$ is computed starting from a function of x. In fact muParserX is used to parse the functions and the exact results from input strings. The exact result is used when validating the computed solution against the exact solution.<br>
 For testing them in the main, both the heat source term $f(x) = \sin(\pi x)$ and the exact analytical solution
-$
+```math
 u_\mathrm{ex}(x) = \frac{\sin(\pi x)}{\pi^2}.
-$
+```
 are provided, together with the domain $[0,L] = [0,1]$, the boundary conditions $\alpha = \beta = 0$ and the heat tridiagonal matrix
-$
+```math
 A = \begin{bmatrix}
 1 & 0 & 0 & \cdots & \cdots & \cdots & \cdots & 0\\
 -1 & 2 & -1 & 0 & & & & \vdots\\
@@ -52,7 +52,7 @@ f(x_2) h^2 \\
 f(x_N) h^2 \\
 \beta
 \end{bmatrix}.
-$
+```
 The diagonals of this matrix are the diagonal vectors a, b, c defined in each Matrix constructor. For computing them and the heat source term, the methods `setHeatMatrix` and `computeHeatSource` are called in the main when solving the heat diffusion problem.
 
 ## Validation of solutions and considerations
@@ -62,7 +62,8 @@ As it can be seen from this plot that compares the numerical and exact solutions
   <img src="images/NumericalVSExactSolution.png" /><br>
  Numerical Solutions VS Exact Solution
 </p>
-A helpful note in case one wishes to reproduce the results, is defining a HeatDiffusion object each time in the main. In fact I had not done it and I was wondering why the Eigen plot and solution were exactly specular to the Tridiagonal ones: solving the heat problem somehow modifies the HeatDiffusion instance thus, having first defined the Tridiagonal one, when later using the Eigen, it starts from opposite values.<br>
+> [!TIP]
+> A helpful note in case one wishes to reproduce the results, is defining a HeatDiffusion object each time in the main. In fact I had not done it and I was wondering why the Eigen plot and solution were exactly specular to the Tridiagonal ones: solving the heat problem somehow modifies the HeatDiffusion instance thus, having first defined the Tridiagonal one, when later using the Eigen, it starts from opposite values.<br>
 The second part of the main is similar to the first one. Wanting to test the Thomas algorithm on a generic tridiagonal matrix outside the heat diffusion problem, I defined a 5x5 matrix, multiplied it by hand to a vector and gave the result to the program. All three compared methods return the original vector I multiplied the matrix with.
 
 ## CMake and libraries
