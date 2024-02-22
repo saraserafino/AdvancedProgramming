@@ -64,7 +64,7 @@ As it can be seen from this plot that compares the numerical and exact solutions
 </p>
 
 > [!TIP]
-> A helpful note in case one wishes to reproduce the results: define a HeatDiffusion object each time in the main.
+> A helpful tip in case one wishes to reproduce the results: define a HeatDiffusion object each time in the main.
 
 In fact I had not done it and I was wondering why the Eigen plot and solution were exactly specular to the Tridiagonal ones: solving the heat problem somehow modifies the HeatDiffusion instance thus, having first defined the Tridiagonal one, when later using the Eigen, it starts from opposite values.<br>
 The second part of the main is similar to the first one. Wanting to test the Thomas algorithm on a generic tridiagonal matrix outside the heat diffusion problem, I defined a 5x5 matrix, multiplied it by hand to a vector and gave the result to the program. All three compared methods return the original vector I multiplied the matrix with.
