@@ -24,7 +24,7 @@ For testing them in the main, both the heat source term $f(x) = \sin(\pi x)$ and
 ```math
 u_\mathrm{ex}(x) = \frac{\sin(\pi x)}{\pi^2}.
 ```
-are provided, together with the domain $[0,L] = [0,1]$, the boundary conditions $\alpha = \beta = 0$ and the heat tridiagonal matrix A that solves the system
+are provided, together with the domain $[0,L] = [0,1]$, the boundary conditions $\alpha = \beta = 0$ and the heat tridiagonal matrix A that solves the system `Au=f` where
 ```math
 A = \begin{bmatrix}
 1 & 0 & 0 & \cdots & \cdots & \cdots & \cdots & 0\\
@@ -35,14 +35,14 @@ A = \begin{bmatrix}
 \vdots & & & \ddots & -1 & 2 & -1 & 0\\
 \vdots & & & & 0 & -1 & 2 & -1\\
 0 & \cdots & \cdots  & \cdots & \cdots & 0 & 0 & 1\\
-\end{bmatrix}
+\end{bmatrix},
 \quad
 \mathbf{u} = \begin{bmatrix}
 u_0 \\
 u_1 \\
 \vdots \\
 u_{N+1}
-\end{bmatrix} =
+\end{bmatrix},
 \quad
 \mathbf{f} = \begin{bmatrix}
 \alpha \\
@@ -62,8 +62,10 @@ As it can be seen from this plot that compares the numerical and exact solutions
   <img src="images/NumericalVSExactSolution.png" /><br>
  Numerical Solutions VS Exact Solution
 </p>
+
 > [!TIP]
 > A helpful note in case one wishes to reproduce the results: define a HeatDiffusion object each time in the main.
+
 In fact I had not done it and I was wondering why the Eigen plot and solution were exactly specular to the Tridiagonal ones: solving the heat problem somehow modifies the HeatDiffusion instance thus, having first defined the Tridiagonal one, when later using the Eigen, it starts from opposite values.<br>
 The second part of the main is similar to the first one. Wanting to test the Thomas algorithm on a generic tridiagonal matrix outside the heat diffusion problem, I defined a 5x5 matrix, multiplied it by hand to a vector and gave the result to the program. All three compared methods return the original vector I multiplied the matrix with.
 
